@@ -1,0 +1,8 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Custom Font Styles */
+body, button, input, textarea, div, h1, h2, h3, h4, h5, h6 {
+    font-family: "Pixelify Sans", sans-serif;
+}
