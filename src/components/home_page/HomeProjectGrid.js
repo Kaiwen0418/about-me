@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useDevice } from '../../utils/DeviceContext'; // Ensure the context hook is correctly imported
 import { projData } from "../../data/data";
 
+const githubIcon = `${process.env.PUBLIC_URL}/images/github-icon.png`;
+
 const ProjectCard = ({ id, proj, curHovered, handleMouseEnter, handleMouseLeave }) => {
     const isMobileDevice = useDevice(); // Using the context to determine if it's a mobile device
 
@@ -56,7 +58,7 @@ const ProjectCard = ({ id, proj, curHovered, handleMouseEnter, handleMouseLeave 
                         {proj.name}
                     </p>
                     <img
-                        src="/images/github-icon.png"
+                        src={githubIcon}
                         alt="github"
                         className="w-3 h-3 mb-1 float-right"  
                     />

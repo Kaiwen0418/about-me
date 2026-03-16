@@ -1,11 +1,8 @@
 module.exports = {
   mode: "jit",
-  purge: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      backgroundImage: {
-        'hopper': "url('/public/images/art_pop/HOPPER.jpg')"
-      },
       filter: { // this ensures filter utilities are enabled
         'none': 'none',
         'grayscale': 'grayscale(1)',

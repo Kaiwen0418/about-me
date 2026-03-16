@@ -7,20 +7,23 @@ import NoAccessPage from "./NoAccessPage";
 
 const MoreDetailsPage = () => {
   const { id } = useParams();
-  // const isMobileDevice = useDevice();
   const navigate = useNavigate();
   const [showText, setShowText] = useState(false);
   const curArtData = artData['hopper'];
+  const backgroundStyle = {
+    backgroundImage: `url(${curArtData.images.base})`,
+  };
 
   if (id === '1') {
     return <NoAccessPage/>
   } else {
     return (
       <div 
-        className="relative w-full h-screen overflow-hidden bg-hopper bg-cover"
+        className="relative w-full h-screen overflow-hidden bg-cover bg-center"
+        style={backgroundStyle}
         onMouseEnter={() => setShowText(true)} onMouseLeave={() => setShowText(false)}
       >
-        <div className="absolute inset-0 bg-hopper bg-cover filter blur-xl"></div>
+        <div className="absolute inset-0 bg-cover bg-center filter blur-xl" style={backgroundStyle}></div>
         <ArtDisplay showText={showText} artData={curArtData} />
 
         <button onClick={() => navigate(-1)} className="absolute top-4 left-4 z-30 flex items-center">

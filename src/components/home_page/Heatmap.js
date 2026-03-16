@@ -40,7 +40,7 @@ const MyGitHubHeatmap = () => {
   useEffect(() => {
     const fetchEventsData = async () => {
         try {
-          const response = await fetch('/data/git_events.json'); // URL relative to the public directory
+          const response = await fetch(`${process.env.PUBLIC_URL}/data/git_events.json`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
