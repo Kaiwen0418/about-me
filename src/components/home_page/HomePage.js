@@ -10,6 +10,7 @@ const customStyles = {
     width: "100vw",
     minHeight: "100vh",
     background: "linear-gradient(90deg, transparent 49.9%, rgba(244,244,244,0.15) 50%, transparent 50.1%)",
+    isolation: "isolate",
   },
   mapLines: {
     position: "absolute",
@@ -35,11 +36,13 @@ const customStyles = {
     top: "12vh",
     left: "8vw",
     fontSize: "14vw",
+    mixBlendMode: "screen",
   },
   tLiu: {
     top: "24vh",
     left: "24vw",
     fontSize: "14vw",
+    mixBlendMode: "difference",
   },
   tRole: {
     top: "40vh",
@@ -47,6 +50,7 @@ const customStyles = {
     fontSize: "4vw",
     letterSpacing: "-0.02em",
     fontWeight: 800,
+    mixBlendMode: "screen",
   },
   bioCluster: {
     position: "absolute",
@@ -104,15 +108,24 @@ const customStyles = {
   },
   projectCluster: {
     position: "absolute",
-    zIndex: 10,
     width: "max-content",
     maxWidth: "280px",
+  },
+  projectMedia: {
+    position: "relative",
+    zIndex: 6,
+    isolation: "isolate",
+  },
+  projectMeta: {
+    position: "relative",
+    zIndex: 24,
   },
   projImgWrapper: {
     width: "160px",
     height: "100px",
     marginBottom: "1rem",
     position: "relative",
+    zIndex: 2,
     overflow: "hidden",
     filter: "grayscale(100%) contrast(200%) brightness(80%)",
     border: "1px solid rgba(255,255,255,0.2)",
@@ -124,11 +137,15 @@ const customStyles = {
     imageRendering: "pixelated",
   },
   projHeader: {
+    position: "relative",
     display: "flex",
     alignItems: "center",
     marginBottom: "0.5rem",
+    zIndex: 30,
   },
   projDesc: {
+    position: "relative",
+    zIndex: 2,
     fontFamily: "'Courier Prime', monospace",
     fontSize: "0.75rem",
     lineHeight: 1.4,
@@ -219,20 +236,37 @@ const Node = ({ children, style }) => {
 
 const ProjectCard = ({ project, style }) => (
   <Link to={`/project/${project.id}`} style={{ ...customStyles.projectCluster, ...style }}>
-    <div style={customStyles.projImgWrapper}>
-      <img
-        src={project.demoImage}
-        alt={project.demoAlt}
-        style={customStyles.projImg}
-        onError={(event) => setFallbackImage(event, project.demoImageFallback)}
-      />
-      <ProjImgOverlay />
+    <div style={customStyles.projectMedia}>
+      <div style={customStyles.projImgWrapper}>
+        <img
+          src={project.demoImage}
+          alt={project.demoAlt}
+          style={customStyles.projImg}
+          onError={(event) => setFallbackImage(event, project.demoImageFallback)}
+        />
+        <ProjImgOverlay />
+      </div>
     </div>
-    <div style={customStyles.projHeader}>
-      <Node>{project.nodeNum}</Node>
-      <div style={customStyles.label}>{project.shortTitle}</div>
+    <div style={customStyles.projectMeta}>
+      <div style={customStyles.projHeader}>
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <Node>{project.nodeNum}</Node>
+        </div>
+        <div
+          style={{
+            ...customStyles.label,
+            mixBlendMode: "difference",
+            position: "relative",
+            zIndex: 30,
+            color: "#ffffff",
+            display: "inline-block",
+          }}
+        >
+          {project.shortTitle}
+        </div>
+      </div>
+      <div style={customStyles.projDesc}>{project.homeDescription}</div>
     </div>
-    <div style={customStyles.projDesc}>{project.homeDescription}</div>
   </Link>
 );
 
