@@ -14,6 +14,21 @@ root.render(
   </React.StrictMode>
 );
 
+window.requestAnimationFrame(() => {
+  window.requestAnimationFrame(() => {
+    const startupLoader = document.getElementById("startup-loader");
+
+    if (!startupLoader) {
+      return;
+    }
+
+    startupLoader.classList.add("startup-loader-hidden");
+    window.setTimeout(() => {
+      startupLoader.remove();
+    }, 260);
+  });
+});
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

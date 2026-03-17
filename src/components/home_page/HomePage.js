@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { projData } from "../../data/data";
 import { useDevice } from "../../utils/DeviceContext";
-import SiteShell from "../SiteShell";
 
 const customStyles = {
   spreadCanvas: {
@@ -182,7 +181,7 @@ const customStyles = {
 };
 
 const projectPositions = {
-  "1": { top: "15vh", left: "55vw" },
+  "1": { top: "15vh", left: "61vw" },
   "2": { top: "40vh", left: "75vw" },
   "3": { top: "65vh", left: "45vw" },
   "4": { top: "75vh", left: "70vw" },
@@ -247,7 +246,7 @@ const ProjectCard = ({ project, style }) => (
         <ProjImgOverlay />
       </div>
     </div>
-    <div style={customStyles.projectMeta}>
+    <div style={{ ...customStyles.projectMeta, ...project.metaStyle }}>
       <div style={customStyles.projHeader}>
         <div style={{ position: "relative", zIndex: 2 }}>
           <Node>{project.nodeNum}</Node>
@@ -278,36 +277,28 @@ const TechItem = ({ style, num, label }) => (
 );
 
 const MobileHome = ({ projects }) => (
-  <SiteShell
-    section="Home"
-    sectionCode="Sys.v1.0"
-    footerLabel="Index: KL-2024"
-    footerMeta=""
-    fullBleed
-  >
-    <div style={{ position: "relative", minHeight: "100vh", padding: "6rem 1.25rem 7rem" }}>
-      <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.85 }}>
-        <div style={{ fontSize: "4.25rem" }}>Kaiwen</div>
-        <div style={{ marginLeft: "20%", fontSize: "4.25rem" }}>Liu</div>
-        <div style={{ marginTop: "1rem", marginLeft: "12%", fontSize: "1.25rem", letterSpacing: "-0.02em" }}>Full-Stack Dev.</div>
-      </div>
+  <div style={{ position: "relative", minHeight: "100vh", padding: "6rem 1.25rem 7rem" }}>
+    <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.85 }}>
+      <div style={{ fontSize: "4.25rem" }}>Kaiwen</div>
+      <div style={{ marginLeft: "20%", fontSize: "4.25rem" }}>Liu</div>
+      <div style={{ marginTop: "1rem", marginLeft: "12%", fontSize: "1.25rem", letterSpacing: "-0.02em" }}>Full-Stack Dev.</div>
+    </div>
 
-      <div style={{ marginTop: "2rem", maxWidth: "28rem" }}>
-        <div style={customStyles.bioText}>
-          User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
-          holding an EIE MEng degree. Operating at the intersection of low-level systems and front-end execution.
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", marginTop: "2rem" }}>
-        {projects.map((project, index) => (
-          <div key={project.id} style={mobileCardStyles[index]}>
-            <ProjectCard project={project} />
-          </div>
-        ))}
+    <div style={{ marginTop: "2rem", maxWidth: "28rem" }}>
+      <div style={customStyles.bioText}>
+        User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
+        holding an EIE MEng degree. Operating at the intersection of low-level systems and front-end execution.
       </div>
     </div>
-  </SiteShell>
+
+    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", marginTop: "2rem" }}>
+      {projects.map((project, index) => (
+        <div key={project.id} style={mobileCardStyles[index]}>
+          <ProjectCard project={project} />
+        </div>
+      ))}
+    </div>
+  </div>
 );
 
 const HomePage = () => {
@@ -323,6 +314,9 @@ const HomePage = () => {
         homeDescription:
           "Web-based logic circuit simulation tool. Real-time component evaluation and state rendering.",
         demoAlt: "Circuit board macro",
+        metaStyle: {
+          transform: "translate(-26px, -8px)",
+        },
       },
       {
         id: "2",
@@ -332,6 +326,9 @@ const HomePage = () => {
         homeDescription:
           "Advanced scheduling algorithm for CNC machine operations, optimizing routing and minimizing downtime.",
         demoAlt: "Machinery parts",
+        metaStyle: {
+          transform: "translate(-20px, -6px)",
+        },
       },
       {
         id: "3",
@@ -341,6 +338,9 @@ const HomePage = () => {
         homeDescription:
           "Hardware-level security protocol implementation for embedded IoT devices.",
         demoAlt: "Abstract data flow",
+        metaStyle: {
+          transform: "translate(-14px, -4px)",
+        },
       },
       {
         id: "4",
@@ -350,6 +350,9 @@ const HomePage = () => {
         homeDescription:
           "Optical character recognition pipeline designed specifically to translate complex mathematical formulas into Braille.",
         demoAlt: "Grid pattern",
+        metaStyle: {
+          transform: "translate(-18px, -8px)",
+        },
       },
     ],
     []
@@ -360,88 +363,80 @@ const HomePage = () => {
   }
 
   return (
-    <SiteShell
-      section="Home"
-      sectionCode="Sys.v1.0"
-      footerLabel="Index: KL-2024"
-      footerMeta=""
-      fullBleed
-    >
-      <div style={customStyles.spreadCanvas}>
-        <svg style={customStyles.mapLines}>
-          <path
-            d="M 55vw 15vh C 65vw 15vh, 65vw 40vh, 75vw 40vh"
-            stroke="rgba(244,244,244,0.15)"
-            strokeWidth="1px"
-            fill="none"
-            strokeDasharray="4 4"
-          />
-          <line
-            x1="15vw"
-            y1="75vh"
-            x2="45vw"
-            y2="65vh"
-            stroke="rgba(244,244,244,0.15)"
-            strokeWidth="1px"
-            strokeDasharray="4 4"
-          />
-          <line
-            x1="75vw"
-            y1="45vh"
-            x2="70vw"
-            y2="75vh"
-            stroke="rgba(244,244,244,0.15)"
-            strokeWidth="1px"
-            strokeDasharray="4 4"
-          />
-          <line
-            x1="34vw"
-            y1="42vh"
-            x2="45vw"
-            y2="42vh"
-            stroke="rgba(244,244,244,0.15)"
-            strokeWidth="1px"
-            strokeDasharray="4 4"
-          />
-          <line
-            x1="85vw"
-            y1="0"
-            x2="85vw"
-            y2="100vh"
-            stroke="rgba(244,244,244,0.15)"
-            strokeWidth="1px"
-            strokeDasharray="2 10"
-          />
-        </svg>
+    <div style={customStyles.spreadCanvas}>
+      <svg style={customStyles.mapLines}>
+        <path
+          d="M 58vw 15vh C 66vw 15vh, 66vw 40vh, 75vw 40vh"
+          stroke="rgba(244,244,244,0.15)"
+          strokeWidth="1px"
+          fill="none"
+          strokeDasharray="4 4"
+        />
+        <line
+          x1="15vw"
+          y1="75vh"
+          x2="45vw"
+          y2="65vh"
+          stroke="rgba(244,244,244,0.15)"
+          strokeWidth="1px"
+          strokeDasharray="4 4"
+        />
+        <line
+          x1="75vw"
+          y1="45vh"
+          x2="70vw"
+          y2="75vh"
+          stroke="rgba(244,244,244,0.15)"
+          strokeWidth="1px"
+          strokeDasharray="4 4"
+        />
+        <line
+          x1="34vw"
+          y1="42vh"
+          x2="45vw"
+          y2="42vh"
+          stroke="rgba(244,244,244,0.15)"
+          strokeWidth="1px"
+          strokeDasharray="4 4"
+        />
+        <line
+          x1="85vw"
+          y1="0"
+          x2="85vw"
+          y2="100vh"
+          stroke="rgba(244,244,244,0.15)"
+          strokeWidth="1px"
+          strokeDasharray="2 10"
+        />
+      </svg>
 
-        <div style={{ ...customStyles.displayText, ...customStyles.tKaiwen }}>Kaiwen</div>
-        <div style={{ ...customStyles.displayText, ...customStyles.tLiu }}>Liu</div>
-        <div style={{ ...customStyles.displayText, ...customStyles.tRole }}>Full-Stack Dev.</div>
+      <div style={{ ...customStyles.displayText, ...customStyles.tKaiwen }}>Kaiwen</div>
+      <div style={{ ...customStyles.displayText, ...customStyles.tLiu }}>Liu</div>
+      <div style={{ ...customStyles.displayText, ...customStyles.tRole }}>Full-Stack Dev.</div>
 
-        <div style={customStyles.systemBadge}>
-          <div style={customStyles.pixelAvatar} />
-        </div>
-
-        <div style={customStyles.bioCluster}>
-          <div style={customStyles.bioText}>
-            User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
-            holding an EIE MEng degree. Documented achievements include multiple high-level implementations across
-            hardware and software boundaries. Operating at the intersection of low-level systems and front-end execution.
-          </div>
-
-          <div style={customStyles.techScatter}>
-            <TechItem style={{ top: 0, left: 0 }} num="05" label="React.js" />
-            <TechItem style={{ top: "30px", left: "80px" }} num="06" label="Node/Exp" />
-            <TechItem style={{ top: "70px", left: "20px" }} num="07" label="Python 3" />
-            <TechItem style={{ top: "110px", left: "100px" }} num="08" label="C / C++" />
-          </div>
-        </div>
-
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} style={projectPositions[project.id]} />
-        ))}
+      <div style={customStyles.systemBadge}>
+        <div style={customStyles.pixelAvatar} />
       </div>
-    </SiteShell>
+
+      <div style={customStyles.bioCluster}>
+        <div style={customStyles.bioText}>
+          User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
+          holding an EIE MEng degree. Documented achievements include multiple high-level implementations across
+          hardware and software boundaries. Operating at the intersection of low-level systems and front-end execution.
+        </div>
+
+        <div style={customStyles.techScatter}>
+          <TechItem style={{ top: 0, left: 0 }} num="05" label="React.js" />
+          <TechItem style={{ top: "30px", left: "80px" }} num="06" label="Node/Exp" />
+          <TechItem style={{ top: "70px", left: "20px" }} num="07" label="Python 3" />
+          <TechItem style={{ top: "110px", left: "100px" }} num="08" label="C / C++" />
+        </div>
+      </div>
+
+      {projects.map((project) => (
+        <ProjectCard key={project.id} project={project} style={projectPositions[project.id]} />
+      ))}
+    </div>
   );
 };
 

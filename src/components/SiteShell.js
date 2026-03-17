@@ -5,7 +5,7 @@ import { useDevice } from "../utils/DeviceContext";
 const navItems = [
   { label: "Home", to: "/" },
   { label: "Projects", to: "/project" },
-  { label: "About", to: "/about" },
+  { label: "About Me", to: "/about" },
 ];
 
 const SiteShell = ({

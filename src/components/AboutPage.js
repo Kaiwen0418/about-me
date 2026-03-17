@@ -1,127 +1,276 @@
 import React from "react";
-import SiteShell from "./SiteShell";
 
-const educationItems = [
+const customStyles = {
+  terminalContainer: {
+    position: "relative",
+    width: "min(900px, calc(100vw - 8rem))",
+    height: "600px",
+    margin: "0 auto",
+    border: "1px solid rgba(244, 244, 244, 0.15)",
+    background: "rgba(0, 0, 0, 0.4)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  },
+  terminalHeader: {
+    padding: "0.75rem 1rem",
+    borderBottom: "1px solid rgba(244, 244, 244, 0.15)",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    fontFamily: "'Space Mono', monospace",
+    fontSize: "0.6rem",
+    color: "#666666",
+    background: "rgba(255, 255, 255, 0.02)",
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+  },
+  terminalScrollArea: {
+    position: "relative",
+    flex: 1,
+    padding: "2rem",
+    overflowY: "auto",
+    scrollbarWidth: "thin",
+    scrollbarColor: "rgba(244, 244, 244, 0.15) transparent",
+    fontFamily: "'Courier Prime', monospace",
+  },
+  cmdLine: {
+    marginBottom: "1rem",
+    fontSize: "0.85rem",
+    lineHeight: 1.6,
+    color: "#F4F4F4",
+  },
+  prompt: {
+    color: "#666666",
+  },
+  output: {
+    color: "#666666",
+    marginTop: "0.25rem",
+    marginBottom: "1.5rem",
+    paddingLeft: "1rem",
+    fontSize: "0.85rem",
+    lineHeight: 1.6,
+  },
+  treeView: {
+    fontFamily: "'Courier Prime', monospace",
+    fontSize: "0.8rem",
+    margin: "1.5rem 0",
+    lineHeight: 1.4,
+    color: "#666666",
+  },
+  treePath: {
+    color: "#F4F4F4",
+    marginTop: "1rem",
+    display: "block",
+  },
+  treeLine: {
+    display: "flex",
+    justifyContent: "space-between",
+    color: "#333333",
+    whiteSpace: "pre",
+  },
+  treeLineActive: {
+    display: "flex",
+    justifyContent: "space-between",
+    color: "#666666",
+    whiteSpace: "pre",
+  },
+  treeSize: {
+    color: "#333333",
+    fontSize: "0.7rem",
+    fontFamily: "'Space Mono', monospace",
+  },
+  timelineItem: {
+    position: "relative",
+    paddingLeft: "1.5rem",
+    marginBottom: "1.5rem",
+    borderLeft: "1px dashed rgba(244, 244, 244, 0.15)",
+  },
+  timelineDot: {
+    position: "absolute",
+    left: "-4px",
+    top: "5px",
+    width: "7px",
+    height: "7px",
+    background: "#F4F4F4",
+  },
+  year: {
+    color: "#F4F4F4",
+    fontWeight: "bold",
+    marginBottom: "0.2rem",
+    display: "block",
+  },
+  inst: {
+    fontSize: "0.75rem",
+    textTransform: "uppercase",
+    color: "#F4F4F4",
+    letterSpacing: "0.08em",
+  },
+  scanline: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.1) 50%)",
+    backgroundSize: "100% 4px",
+    pointerEvents: "none",
+    zIndex: 5,
+  },
+  exportButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    marginTop: "2rem",
+    padding: "0.8rem 1.5rem",
+    border: "1px solid #F4F4F4",
+    color: "#F4F4F4",
+    background: "transparent",
+    textDecoration: "none",
+    fontFamily: "'Space Mono', monospace",
+    fontSize: "0.7rem",
+    textTransform: "uppercase",
+    letterSpacing: "0.1em",
+    transition: "all 0.3s ease",
+  },
+};
+
+const timelineItems = [
   {
-    year: "2020-2024",
-    label: "Imperial College London",
-    description: "MEng in Electrical and Electronic Engineering with a focus on systems thinking, software-heavy tooling, and hardware-aware design.",
+    year: "2019 — 2023",
+    inst: "Imperial College London",
+    description: "MEng Electronic & Information Engineering (EIE)",
   },
   {
-    year: "2023",
-    label: "CloudNC Ltd",
-    description: "Built workflow analysis and scheduling tooling around manufacturing data, where latency, clarity, and operator trust all mattered.",
-  },
-  {
-    year: "Ongoing",
-    label: "Independent Projects",
-    description: "Prototype-heavy work across interface systems, creative coding, and embedded applications that need to explain themselves quickly.",
+    year: "2023 — Present",
+    inst: "Full-Stack Development",
+    description:
+      "Specializing in high-performance web applications and embedded systems security.",
   },
 ];
 
-const notes = [
-  "System-oriented developer focused on the seam between constrained hardware and high-level software.",
-  "Strong interest in visual hierarchy, interaction density, and interfaces that reward close inspection.",
-  "Best fit work usually combines technical precision, product judgment, and some amount of aesthetic tension.",
+const skillGroups = [
+  {
+    path: "./skills:",
+    rows: [
+      ["├── c_cpp/", "4096 KB", true],
+      ["├── javascript/", "4096 KB", true],
+      ["├── python/", "4096 KB", true],
+      ["└── hardware/", "4096 KB", true],
+    ],
+  },
+  {
+    path: "./skills/c_cpp:",
+    rows: [
+      ["├── std_lib.h", "85.0%"],
+      ["└── assembly.s", "40.0%"],
+    ],
+  },
+  {
+    path: "./skills/javascript:",
+    rows: [
+      ["├── react_hooks.js", "75.0%"],
+      ["└── node_express.js", "65.0%"],
+    ],
+  },
+  {
+    path: "./skills/python:",
+    rows: [["└── data_pipeline.py", "90.0%"]],
+  },
+  {
+    path: "./skills/hardware:",
+    rows: [["└── fpga_hdl.v", "55.0%"]],
+  },
 ];
+
+const Cursor = () => (
+  <span
+    className="cursor-blink"
+    style={{
+      display: "inline-block",
+      width: "8px",
+      height: "15px",
+      background: "#F4F4F4",
+      verticalAlign: "middle",
+      marginLeft: "4px",
+    }}
+  />
+);
+
+const TimelineItem = ({ year, inst, description }) => (
+  <div style={customStyles.timelineItem}>
+    <div style={customStyles.timelineDot} />
+    <span style={customStyles.year}>{year}</span>
+    <span style={customStyles.inst}>{inst}</span>
+    <p>{description}</p>
+  </div>
+);
 
 const AboutPage = () => {
   return (
-    <SiteShell section="About" sectionCode="SYS.V2 DOSSIER">
-      <section className="w-full">
-        <div className="folio-panel overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[var(--folio-line)] px-5 py-4 text-[0.68rem] uppercase tracking-[0.18em] text-[var(--folio-muted)]">
-            <span>Terminal session // profile.log</span>
-            <span>Location // London, UK</span>
+    <div className="flex min-h-screen items-center justify-center px-8 py-24">
+      <section style={customStyles.terminalContainer}>
+        <div style={customStyles.scanline} />
+        <div style={customStyles.terminalHeader}>
+          <span>TERMINAL: SESSION_ID_8842</span>
+          <span>LOCATION: LONDON, UK</span>
+        </div>
+
+        <div style={customStyles.terminalScrollArea}>
+          <div style={customStyles.cmdLine}>
+            <span style={customStyles.prompt}>&gt; </span>cat biography.txt
+          </div>
+          <div style={customStyles.output}>
+            Kaiwen Liu is a systems-oriented developer specializing in the friction point
+            between hardware constraints and high-level software abstractions. Educated at
+            Imperial College London, his work emphasizes efficiency, security, and low-latency
+            execution.
           </div>
 
-          <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="border-b border-[var(--folio-line)] p-6 lg:border-b-0 lg:border-r">
-              <div className="space-y-6">
-                <div>
-                  <p className="mb-3 text-[0.75rem] uppercase tracking-[0.22em] text-[var(--folio-muted)]">
-                    &gt; cat biography.txt
-                  </p>
-                  <p className="folio-copy max-w-2xl">
-                    Kaiwen Liu is a developer who likes interfaces with structure and systems with
-                    sharp edges. Most projects start at a technical problem and end as a design
-                    problem: how to make complexity legible, responsive, and useful under pressure.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="mb-4 text-[0.75rem] uppercase tracking-[0.22em] text-[var(--folio-muted)]">
-                    &gt; ls --timeline background/
-                  </p>
-                  <div className="space-y-6">
-                    {educationItems.map((item) => (
-                      <div key={item.label} className="relative border-l border-dashed border-[var(--folio-line)] pl-6">
-                        <span className="absolute left-[-5px] top-1 h-2 w-2 bg-[var(--folio-fg)]" />
-                        <p className="mb-1 text-sm font-bold uppercase tracking-[0.14em] text-[var(--folio-fg)]">
-                          {item.year}
-                        </p>
-                        <p className="mb-2 text-[0.75rem] uppercase tracking-[0.16em] text-[var(--folio-accent)]">
-                          {item.label}
-                        </p>
-                        <p className="folio-copy">{item.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="space-y-6">
-                <div>
-                  <p className="mb-4 text-[0.75rem] uppercase tracking-[0.22em] text-[var(--folio-muted)]">
-                    &gt; tree ./attributes
-                  </p>
-                  <div className="space-y-3 text-[0.8rem] leading-7 text-[var(--folio-muted)]">
-                    <div className="flex justify-between gap-4 border-b border-[var(--folio-line)] pb-2">
-                      <span>software/frontend</span>
-                      <span>dense UI systems</span>
-                    </div>
-                    <div className="flex justify-between gap-4 border-b border-[var(--folio-line)] pb-2">
-                      <span>software/backend</span>
-                      <span>tooling + data flow</span>
-                    </div>
-                    <div className="flex justify-between gap-4 border-b border-[var(--folio-line)] pb-2">
-                      <span>hardware</span>
-                      <span>embedded + device logic</span>
-                    </div>
-                    <div className="flex justify-between gap-4 border-b border-[var(--folio-line)] pb-2">
-                      <span>design</span>
-                      <span>layout, motion, identity</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="mb-4 text-[0.75rem] uppercase tracking-[0.22em] text-[var(--folio-muted)]">
-                    &gt; cat notes.md
-                  </p>
-                  <div className="space-y-4">
-                    {notes.map((note) => (
-                      <p key={note} className="folio-copy">
-                        {note}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-
-                <a
-                  href="mailto:kaiwenliu0418@gmail.com"
-                  className="inline-flex border border-[var(--folio-fg)] px-4 py-3 text-[0.7rem] uppercase tracking-[0.2em] transition hover:bg-[var(--folio-fg)] hover:text-black"
-                >
-                  Open contact channel
-                </a>
-              </div>
-            </div>
+          <div style={customStyles.cmdLine}>
+            <span style={customStyles.prompt}>&gt; </span>ls --timeline education/
           </div>
+          <div style={customStyles.output}>
+            {timelineItems.map((item) => (
+              <TimelineItem
+                key={item.year}
+                year={item.year}
+                inst={item.inst}
+                description={item.description}
+              />
+            ))}
+          </div>
+
+          <div style={customStyles.cmdLine}>
+            <span style={customStyles.prompt}>&gt; </span>ls -R --sort=proficiency skills/
+          </div>
+          <div style={customStyles.treeView}>
+            {skillGroups.map((group) => (
+              <React.Fragment key={group.path}>
+                <span style={customStyles.treePath}>{group.path}</span>
+                {group.rows.map(([label, value, active]) => (
+                  <div
+                    key={`${group.path}-${label}`}
+                    style={active ? customStyles.treeLineActive : customStyles.treeLine}
+                  >
+                    <span>{label}</span>
+                    <span style={customStyles.treeSize}>{value}</span>
+                  </div>
+                ))}
+              </React.Fragment>
+            ))}
+          </div>
+
+          <div style={customStyles.cmdLine}>
+            <span style={customStyles.prompt}>&gt; </span>export --file CV_2024.pdf
+            <Cursor />
+          </div>
+
+          <a href="mailto:kaiwenliu0418@gmail.com" style={customStyles.exportButton}>
+            &gt; Download_Sys_Manifesto.pdf
+          </a>
         </div>
       </section>
-    </SiteShell>
+    </div>
   );
 };
 
