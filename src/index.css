@@ -1,7 +1,6 @@
 body {
   margin: 0;
-  font-family: "Pixelify Sans", sans-serif;
-  font-optical-sizing: auto;
+  min-height: 100vh;
 }
 
 code {

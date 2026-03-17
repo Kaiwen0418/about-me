@@ -14,6 +14,8 @@ export const projData = {
       static: asset("/images/proj_static/camera.png"),
       overview: asset("/images/proj_detail/cam.jpg"),
     },
+    demoImage: asset("/images/demo/home/embedded-security.jpg"),
+    demoImageFallback: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "Python, JavaScript"],
       ["Platform", "Raspberry Pi/Web-based/Desktop"],
@@ -37,6 +39,8 @@ export const projData = {
       static: asset("/images/proj_static/cnc.png"),
       overview: asset("/images/proj_detail/cnc_data.png"),
     },
+    demoImage: asset("/images/demo/home/cnc-system.jpg"),
+    demoImageFallback: "https://images.unsplash.com/photo-1565439399-2b0e50f38b55?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "Python, JavaScript"],
       ["Platform", "Web-based"],
@@ -60,6 +64,8 @@ export const projData = {
       static: asset("/images/proj_static/circuit.png"),
       overview: asset("/images/proj_detail/issie_drag.gif"),
     },
+    demoImage: asset("/images/demo/home/circuit-simulator.jpg"),
+    demoImageFallback: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "F#"],
       ["Platform", "Desktop/Cross-platform"],
@@ -83,6 +89,8 @@ export const projData = {
       static: asset("/images/proj_static/braille.png"),
       overview: asset("/images/proj_detail/braille_page.png"),
     },
+    demoImage: asset("/images/demo/home/math-braille.jpg"),
+    demoImageFallback: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "Python, JavaScript"],
       ["Platform", "Web-based"],
