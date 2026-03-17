@@ -2,50 +2,9 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { projData } from "../../data/data";
 import { useDevice } from "../../utils/DeviceContext";
+import SiteShell from "../SiteShell";
 
 const customStyles = {
-  body: {
-    backgroundColor: "#090909",
-    color: "#F4F4F4",
-    overflowX: "hidden",
-    minHeight: "100vh",
-    cursor: "crosshair",
-    backgroundImage:
-      "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E\")",
-  },
-  folioNav: {
-    position: "fixed",
-    fontFamily: "'Space Mono', monospace",
-    fontSize: "0.65rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.15em",
-    zIndex: 100,
-    mixBlendMode: "difference",
-  },
-  navLink: {
-    color: "#F4F4F4",
-    textDecoration: "none",
-  },
-  topLeft: {
-    top: "2rem",
-    left: "2rem",
-  },
-  topRight: {
-    top: "2rem",
-    right: "2rem",
-    display: "flex",
-    gap: "2rem",
-  },
-  bottomLeft: {
-    bottom: "2rem",
-    left: "2rem",
-  },
-  bottomRight: {
-    bottom: "2rem",
-    right: "2rem",
-    display: "flex",
-    gap: "1.5rem",
-  },
   spreadCanvas: {
     position: "relative",
     width: "100vw",
@@ -258,12 +217,6 @@ const Node = ({ children, style }) => {
   );
 };
 
-const NavTextLink = ({ to, children, style }) => (
-  <Link to={to} style={{ ...customStyles.navLink, ...style }}>
-    {children}
-  </Link>
-);
-
 const ProjectCard = ({ project, style }) => (
   <Link to={`/project/${project.id}`} style={{ ...customStyles.projectCluster, ...style }}>
     <div style={customStyles.projImgWrapper}>
@@ -291,15 +244,14 @@ const TechItem = ({ style, num, label }) => (
 );
 
 const MobileHome = ({ projects }) => (
-  <div style={{ ...customStyles.body, position: "relative", padding: "6rem 1.25rem 7rem" }}>
-    <div style={{ ...customStyles.folioNav, ...customStyles.topLeft, left: "1.25rem", top: "1.25rem" }}>Sys.v1.0</div>
-    <nav style={{ ...customStyles.folioNav, ...customStyles.topRight, right: "1.25rem", top: "1.25rem", gap: "1rem" }}>
-      <NavTextLink to="/">Home</NavTextLink>
-      <NavTextLink to="/project">Project</NavTextLink>
-      <NavTextLink to="/about">About</NavTextLink>
-    </nav>
-
-    <div style={{ marginTop: "2rem" }}>
+  <SiteShell
+    section="Home"
+    sectionCode="Sys.v1.0"
+    footerLabel="Index: KL-2024"
+    footerMeta=""
+    fullBleed
+  >
+    <div style={{ position: "relative", minHeight: "100vh", padding: "6rem 1.25rem 7rem" }}>
       <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.85 }}>
         <div style={{ fontSize: "4.25rem" }}>Kaiwen</div>
         <div style={{ marginLeft: "20%", fontSize: "4.25rem" }}>Liu</div>
@@ -321,13 +273,7 @@ const MobileHome = ({ projects }) => (
         ))}
       </div>
     </div>
-
-    <div style={{ ...customStyles.folioNav, ...customStyles.bottomLeft, left: "1.25rem", bottom: "1.25rem" }}>Index: KL-2024</div>
-    <div style={{ ...customStyles.folioNav, ...customStyles.bottomRight, right: "1.25rem", bottom: "1.25rem", gap: "1rem" }}>
-      <a href="https://www.linkedin.com/in/kaiwen-liu-5237911b9/" style={customStyles.navLink} target="_blank" rel="noreferrer">LinkedIn</a>
-      <a href="https://github.com/Kaiwen0418" style={customStyles.navLink} target="_blank" rel="noreferrer">GitHub</a>
-    </div>
-  </div>
+  </SiteShell>
 );
 
 const HomePage = () => {
@@ -380,28 +326,13 @@ const HomePage = () => {
   }
 
   return (
-    <div style={{ ...customStyles.body, position: "relative" }}>
-      <div style={{ ...customStyles.folioNav, ...customStyles.topLeft }}>Sys.v1.0</div>
-
-      <nav style={{ ...customStyles.folioNav, ...customStyles.topRight }}>
-        <NavTextLink to="/">Home</NavTextLink>
-        <NavTextLink to="/project">Project</NavTextLink>
-        <NavTextLink to="/about">About</NavTextLink>
-      </nav>
-
-      <div style={{ ...customStyles.folioNav, ...customStyles.bottomLeft }}>Index: KL-2024</div>
-      <div style={{ ...customStyles.folioNav, ...customStyles.bottomRight }}>
-        <a href="https://www.linkedin.com/in/kaiwen-liu-5237911b9/" target="_blank" rel="noreferrer" style={customStyles.navLink}>
-          LinkedIn
-        </a>
-        <a href="https://github.com/Kaiwen0418" target="_blank" rel="noreferrer" style={customStyles.navLink}>
-          GitHub
-        </a>
-        <a href="mailto:kaiwenliu0418@gmail.com" style={customStyles.navLink}>
-          Email
-        </a>
-      </div>
-
+    <SiteShell
+      section="Home"
+      sectionCode="Sys.v1.0"
+      footerLabel="Index: KL-2024"
+      footerMeta=""
+      fullBleed
+    >
       <div style={customStyles.spreadCanvas}>
         <svg style={customStyles.mapLines}>
           <path
@@ -476,7 +407,7 @@ const HomePage = () => {
           <ProjectCard key={project.id} project={project} style={projectPositions[project.id]} />
         ))}
       </div>
-    </div>
+    </SiteShell>
   );
 };
 

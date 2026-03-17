@@ -33,7 +33,7 @@ const ProjectsArchive = () => {
 
   return (
     <SiteShell section="Projects" sectionCode="SYS.V2 ARCHIVE">
-      <section className="mx-auto max-w-6xl">
+      <section className="w-full">
         <div className="mb-10 border-b border-[var(--folio-line)] pb-6">
           <p className="mb-3 text-[0.72rem] uppercase tracking-[0.22em] text-[var(--folio-muted)]">
             Selected work

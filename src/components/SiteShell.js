@@ -8,7 +8,15 @@ const navItems = [
   { label: "About", to: "/about" },
 ];
 
-const SiteShell = ({ children, section, sectionCode = "SYS.V2" }) => {
+const SiteShell = ({
+  children,
+  section,
+  sectionCode = "SYS.V2",
+  footerLabel = "London, UK",
+  footerMeta = "2026",
+  fullBleed = false,
+  canvasStyle,
+}) => {
   const location = useLocation();
   const isMobileDevice = useDevice();
 
@@ -22,10 +30,6 @@ const SiteShell = ({ children, section, sectionCode = "SYS.V2" }) => {
 
   return (
     <div className="folio-shell min-h-screen text-[var(--folio-fg)]">
-      <div className="folio-noise" />
-      <div className="folio-vline" />
-      <div className="folio-scanline" />
-
       <header className="folio-nav folio-nav-left">
         <span>{sectionCode}</span>
         <span className="text-[var(--folio-muted)]">{"/"}</span>
@@ -44,14 +48,17 @@ const SiteShell = ({ children, section, sectionCode = "SYS.V2" }) => {
         ))}
       </nav>
 
-      <main className="relative z-10 px-6 pb-24 pt-24 md:px-10 md:pb-28 md:pt-28">
+      <main
+        className={`folio-canvas relative z-10 ${fullBleed ? "folio-main-bleed" : "folio-main"}`}
+        style={canvasStyle}
+      >
         {children}
       </main>
 
       <footer className={`folio-nav folio-nav-footer ${isMobileDevice ? "flex-col items-start gap-2" : ""}`}>
         <div className="flex items-center gap-4">
-          <span>London, UK</span>
-          <span className="text-[var(--folio-muted)]">2026</span>
+          <span>{footerLabel}</span>
+          <span className="text-[var(--folio-muted)]">{footerMeta}</span>
         </div>
         <div className="flex items-center gap-4">
           <a href="https://github.com/Kaiwen0418" target="_blank" rel="noreferrer" className="folio-link">

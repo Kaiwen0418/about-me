@@ -2,12 +2,11 @@
   "name": "pixel_style_website",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
     "axios": "^1.7.7",
     "cal-heatmap": "^4.2.4",
     "lucide-react": "^0.399.0",
@@ -17,7 +16,6 @@
     "react-router-dom": "^6.24.0",
     "react-scripts": "5.0.1",
     "tailwindcss": "^3.4.4",
-    "tsparticles": "^3.5.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

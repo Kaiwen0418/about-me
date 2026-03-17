@@ -28,7 +28,7 @@ const notes = [
 const AboutPage = () => {
   return (
     <SiteShell section="About" sectionCode="SYS.V2 DOSSIER">
-      <section className="mx-auto max-w-6xl">
+      <section className="w-full">
         <div className="folio-panel overflow-hidden">
           <div className="flex items-center justify-between border-b border-[var(--folio-line)] px-5 py-4 text-[0.68rem] uppercase tracking-[0.18em] text-[var(--folio-muted)]">
             <span>Terminal session // profile.log</span>

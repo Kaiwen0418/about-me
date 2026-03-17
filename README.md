@@ -41,4 +41,4 @@ The site uses hash-based routing, so GitHub Pages can serve nested views without
 
 ## Notes
 
-This project currently includes both `package-lock.json` and `pnpm-lock.yaml`. The workflow uses `npm ci`, so if you want to standardize on `pnpm`, the workflow should be updated to match.
+This repository is standardized on `npm`. Use `npm install` locally so `package-lock.json` stays in sync with GitHub Actions.
