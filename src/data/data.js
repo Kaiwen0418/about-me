@@ -14,7 +14,7 @@ export const projData = {
       static: asset("/images/proj_static/camera.png"),
       overview: asset("/images/proj_detail/cam.jpg"),
     },
-    demoImage: asset("/images/demo/home/embedded-security.jpg"),
+    demoImage: asset("/images/demo/home/object-echo-cover.svg"),
     demoImageFallback: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "JavaScript"],
@@ -39,7 +39,7 @@ export const projData = {
       static: asset("/images/proj_static/cnc.png"),
       overview: asset("/images/proj_detail/cnc_data.png"),
     },
-    demoImage: asset("/images/demo/home/cnc-system.jpg"),
+    demoImage: asset("/images/demo/home/benchmark-echo-cover.svg"),
     demoImageFallback: "https://images.unsplash.com/photo-1565439399-2b0e50f38b55?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "Python, JavaScript"],
@@ -114,7 +114,7 @@ export const projData = {
       static: asset("/images/proj_static/cnc.png"),
       overview: asset("/images/proj_detail/cnc_data.png"),
     },
-    demoImage: asset("/images/demo/home/cnc-system.jpg"),
+    demoImage: asset("/images/demo/home/market-dashboard-cover.svg"),
     demoImageFallback: "https://images.unsplash.com/photo-1642790551116-18e150f248e3?auto=format&fit=crop&w=400&q=80",
     details: [
       ["Language", "Python, JavaScript"],

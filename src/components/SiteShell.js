@@ -31,19 +31,25 @@ const SiteShell = ({
   return (
     <div className="folio-shell min-h-screen text-[var(--folio-fg)]">
       <header className="folio-nav folio-nav-left">
-        <span>{sectionCode}</span>
-        <span className="text-[var(--folio-muted)]">{"/"}</span>
-        <span>{section}</span>
+        <span>{isMobileDevice ? sectionCode : sectionCode}</span>
+        {!isMobileDevice ? <span className="text-[var(--folio-muted)]">{"/"}</span> : null}
+        {!isMobileDevice ? <span>{section}</span> : null}
       </header>
 
-      <nav className={`folio-nav folio-nav-right ${isMobileDevice ? "gap-4" : "gap-8"}`}>
+      <nav className={`folio-nav folio-nav-right ${isMobileDevice ? "gap-3" : "gap-8"}`}>
         {navItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
             className={`folio-link ${isActive(item.to) ? "folio-link-active" : ""}`}
           >
-            {item.label}
+            {isMobileDevice
+              ? item.to === "/project"
+                ? "Work"
+                : item.to === "/about"
+                  ? "About"
+                  : item.label
+              : item.label}
           </Link>
         ))}
       </nav>

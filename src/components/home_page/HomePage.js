@@ -174,7 +174,7 @@ const customStyles = {
     width: "32px",
     height: "32px",
     backgroundImage:
-      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23F4F4F4' d='M2 0h4v1H2zm-1 1h1v1H1zm5 0h1v1H6zM1 2h1v1H1zm5 0h1v1H6zM0 3h2v1H0zm6 0h2v1H6zM0 4h1v1H0zm2 4h1V4H2zm3 4h1V4H5zm2-4h1v1H7zM1 5h1v1H1zm5 0h1v1H6zM2 6h1v1H2zm3 0h1v1H5z'/%3E%3C/svg%3E\")",
+      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23F4F4F4' d='M2 0h4v1H2zm-1 1h1v1H1zm5 0h1v1H6zM1 2h1v1H1zm5 0h1v1H6zM0 3h2v1H0zm6 0h2v1H6zM0 4h1v1H0zm2 0h1v1H2zm3 0h1v1H5zm2 0h1v1H7zM1 5h1v1H1zm5 0h1v1H6zM2 6h1v1H2zm3 0h1v1H5z'/%3E%3C/svg%3E\")",
     backgroundSize: "cover",
     imageRendering: "pixelated",
   },
@@ -235,41 +235,80 @@ const Node = ({ children, style }) => {
   );
 };
 
-const ProjectCard = ({ project, style }) => (
-  <Link to={`/project/${project.id}`} style={{ ...customStyles.projectCluster, ...style }}>
-    <div style={customStyles.projectMedia}>
-      <div style={customStyles.projImgWrapper}>
-        <img
-          src={project.demoImage}
-          alt={project.demoAlt}
-          style={customStyles.projImg}
-          onError={(event) => setFallbackImage(event, project.demoImageFallback)}
-        />
-        <ProjImgOverlay />
-      </div>
-    </div>
-    <div style={{ ...customStyles.projectMeta, ...project.metaStyle }}>
-      <div style={customStyles.projHeader}>
-        <div style={{ position: "relative", zIndex: 2 }}>
-          <Node>{project.nodeNum}</Node>
+const ProjectCard = ({ project, style, isMobile = false }) => {
+  const clusterStyle = isMobile
+    ? {
+        position: "relative",
+        display: "block",
+        width: "100%",
+        maxWidth: "none",
+        padding: "0.9rem",
+        border: "1px solid rgba(244,244,244,0.14)",
+        background: "rgba(255,255,255,0.02)",
+      }
+    : { ...customStyles.projectCluster, ...style };
+
+  const imageWrapperStyle = isMobile
+    ? {
+        ...customStyles.projImgWrapper,
+        width: "100%",
+        height: "140px",
+        marginBottom: "0.85rem",
+      }
+    : customStyles.projImgWrapper;
+
+  const metaStyle = isMobile
+    ? {
+        ...customStyles.projectMeta,
+      }
+    : { ...customStyles.projectMeta, ...project.metaStyle };
+
+  const descStyle = isMobile
+    ? {
+        ...customStyles.projDesc,
+        marginLeft: 0,
+        marginTop: "0.4rem",
+        fontSize: "0.8rem",
+      }
+    : customStyles.projDesc;
+
+  return (
+    <Link to={`/project/${project.id}`} style={clusterStyle}>
+      <div style={customStyles.projectMedia}>
+        <div style={imageWrapperStyle}>
+          <img
+            src={project.demoImage}
+            alt={project.demoAlt}
+            style={customStyles.projImg}
+            onError={(event) => setFallbackImage(event, project.demoImageFallback)}
+          />
+          <ProjImgOverlay />
         </div>
-        <div
-          style={{
-            ...customStyles.label,
-            mixBlendMode: "difference",
-            position: "relative",
-            zIndex: 30,
-            color: "#ffffff",
-            display: "inline-block",
-          }}
-        >
-          {project.shortTitle}
-        </div>
       </div>
-      <div style={customStyles.projDesc}>{project.homeDescription}</div>
-    </div>
-  </Link>
-);
+      <div style={metaStyle}>
+        <div style={customStyles.projHeader}>
+          <div style={{ position: "relative", zIndex: 2 }}>
+            <Node>{project.nodeNum}</Node>
+          </div>
+          <div
+            style={{
+              ...customStyles.label,
+              mixBlendMode: "difference",
+              position: "relative",
+              zIndex: 30,
+              color: "#ffffff",
+              display: "inline-block",
+              fontSize: isMobile ? "0.72rem" : customStyles.label.fontSize,
+            }}
+          >
+            {project.shortTitle}
+          </div>
+        </div>
+        <div style={descStyle}>{project.homeDescription}</div>
+      </div>
+    </Link>
+  );
+};
 
 const TechItem = ({ style, num, label }) => (
   <div style={{ ...customStyles.techItem, ...style }}>
@@ -279,26 +318,106 @@ const TechItem = ({ style, num, label }) => (
 );
 
 const MobileHome = ({ projects }) => (
-  <div style={{ position: "relative", minHeight: "100vh", padding: "6rem 1.25rem 7rem" }}>
-    <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.85 }}>
-      <div style={{ fontSize: "4.25rem" }}>Kaiwen</div>
-      <div style={{ marginLeft: "20%", fontSize: "4.25rem" }}>Liu</div>
-      <div style={{ marginTop: "1rem", marginLeft: "12%", fontSize: "1.25rem", letterSpacing: "-0.02em" }}>Full-Stack Dev.</div>
+  <div style={{ position: "relative", minHeight: "100vh", padding: "5.5rem 1.25rem 3rem" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2.25rem" }}>
+      <div
+        style={{
+          fontFamily: "'Space Mono', monospace",
+          fontSize: "0.66rem",
+          textTransform: "uppercase",
+          letterSpacing: "0.14em",
+          color: "#8f8b84",
+        }}
+      >
+        Selected Work
+      </div>
+      <div
+        style={{
+          width: "40px",
+          height: "40px",
+          border: "1px solid rgba(244,244,244,0.14)",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ ...customStyles.pixelAvatar, width: "16px", height: "16px" }} />
+      </div>
     </div>
 
-    <div style={{ marginTop: "2rem", maxWidth: "28rem" }}>
+    <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.82 }}>
+      <div style={{ fontSize: "clamp(3.5rem, 20vw, 4.8rem)" }}>Kaiwen</div>
+      <div style={{ marginLeft: "18%", fontSize: "clamp(3.5rem, 20vw, 4.8rem)" }}>Liu</div>
+      <div style={{ marginTop: "0.9rem", marginLeft: "11%", fontSize: "1rem", letterSpacing: "-0.02em" }}>Full-Stack Dev.</div>
+    </div>
+
+    <div style={{ marginTop: "1.75rem", maxWidth: "28rem" }}>
       <div style={customStyles.bioText}>
         User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
         holding an EIE MEng degree. Operating at the intersection of low-level systems and front-end execution.
       </div>
     </div>
 
-    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", marginTop: "2rem" }}>
+    <div
+      style={{
+        marginTop: "2rem",
+        marginLeft: "-1.25rem",
+        marginRight: "-1.25rem",
+        padding: "0 1.25rem",
+        overflowX: "auto",
+        display: "flex",
+        gap: "0.9rem",
+        scrollSnapType: "x proximity",
+        scrollbarWidth: "none",
+      }}
+    >
       {projects.map((project, index) => (
-        <div key={project.id} style={mobileCardStyles[index]}>
-          <ProjectCard project={project} />
+        <div
+          key={project.id}
+          style={{
+            ...mobileCardStyles[index],
+            flex: "0 0 85%",
+            maxWidth: "20rem",
+            scrollSnapAlign: "start",
+          }}
+        >
+          <ProjectCard project={project} isMobile />
         </div>
       ))}
+    </div>
+
+    <div
+      style={{
+        marginTop: "1.2rem",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "1rem",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'Space Mono', monospace",
+          fontSize: "0.58rem",
+          textTransform: "uppercase",
+          letterSpacing: "0.12em",
+          color: "#8f8b84",
+        }}
+      >
+        Swipe for more projects
+      </div>
+      <div
+        style={{
+          fontFamily: "'Space Mono', monospace",
+          fontSize: "0.58rem",
+          textTransform: "uppercase",
+          letterSpacing: "0.12em",
+          color: "#f4f2ea",
+        }}
+      >
+        05 Records
+      </div>
     </div>
   </div>
 );
