@@ -2,11 +2,11 @@ const asset = (path) => `${process.env.PUBLIC_URL}${path}`;
 
 export const projData = {
   3: {
-    name: "Embedded Security System",
-    description: "A sophisticated security system leveraging facial recognition technology to enhance security measures. Express.js, Vue.JS, MongoDB - Deployed on Raspberry Pi with real-time facial recognition and web interface controls.",
-    brief: "Face Recognition Embedded Security System",
+    name: "Object Echo",
+    description: "A 3D device museum project focused on presenting hardware artifacts through an interactive web experience. Built as a modern repository-backed showcase for exploring device history and digital preservation.",
+    brief: "3D Device Museum",
     url: {
-      github: 'https://github.com/Kaiwen0418/Face-Recognition-Embedded-Security-System',
+      github: 'https://github.com/Kaiwen0418/object-echo',
       site: ''
     },
     images: {
@@ -17,21 +17,21 @@ export const projData = {
     demoImage: asset("/images/demo/home/embedded-security.jpg"),
     demoImageFallback: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400&q=80",
     details: [
-      ["Language", "Python, JavaScript"],
-      ["Platform", "Raspberry Pi/Web-based/Desktop"],
-      ["Front-end", "Vue.JS, Flask"],
-      ["Back-end", "Express.js, MongoDB, NumPy"],
+      ["Language", "JavaScript"],
+      ["Platform", "Web-based"],
+      ["Front-end", "Interactive 3D UI"],
+      ["Back-end", "Repository-hosted app"],
     ],
-    projectHighlights: "Designed and developed user interfaces for device control, visitor statistics, and live video streaming, enhancing security measures through facial recognition technology.",
+    projectHighlights: "Presents a curated hardware collection as a 3D museum experience, shifting the project focus from device security to interactive digital exhibition.",
     emoji: "🔒",
     stackIcons: [asset("/icon/python.png"), asset("/icon/js.png"), asset("/icon/node.png"), asset("/icon/vue.png")]
   },
   2: {
-    name: "CNC Scheduling System",
-    description: "A state-of-the-art scheduling system that optimizes factory operations through advanced data analysis.NumPy, Flask, React.JS - Developed for CloudNC Ltd to process real-time factory data and manage workflow.",
-    brief: "CNC Factory Scheduling System",
+    name: "Benchmark Echo",
+    description: "An agent benchmarking project for evaluating and comparing autonomous system performance across tasks. It reframes the previous factory scheduling entry around benchmarking workflows, measurements, and iteration speed.",
+    brief: "Agent Benchmarking Platform",
     url: {
-      github: '',
+      github: 'https://github.com/Kaiwen0418/benchmark-echo',
       site: ''
     },
     images: {
@@ -44,10 +44,10 @@ export const projData = {
     details: [
       ["Language", "Python, JavaScript"],
       ["Platform", "Web-based"],
-      ["Front-end", "React.JS, Dashboard.py"],
-      ["Back-end", "Flask, Express.js, NumPy"],
+      ["Front-end", "Benchmark dashboards"],
+      ["Back-end", "Evaluation pipelines"],
     ],
-    projectHighlights: "Spearheaded the development of a workflow analysis tool that features real-time data processing and a user-friendly dashboard for efficient factory scheduling.",
+    projectHighlights: "Centers on measuring agent quality and execution behavior, replacing the earlier CNC scheduling workflow with benchmarking and analysis tooling.",
     emoji: "🏭",
     stackIcons: [asset("/icon/python.png"), asset("/icon/js.png"), asset("/icon/node.png"), asset("/icon/react.png")]
   },
@@ -100,6 +100,31 @@ export const projData = {
     projectHighlights: "Empowers visually impaired students by providing them with the tools necessary to study complex mathematical content independently.",
     emoji: "🧮",
     stackIcons: [asset("/icon/python.png"), asset("/icon/js.png"), asset("/icon/node.png"), asset("/icon/vue.png")]
+  },
+  5: {
+    name: "Prediction Market Intelligence Dashboard",
+    description: "A market intelligence dashboard for tracking and interpreting prediction market activity. The project focuses on surfacing live market signals, comparative views, and decision-oriented monitoring in a compact web interface.",
+    brief: "Prediction Market Dashboard",
+    url: {
+      github: 'https://github.com/Kaiwen0418/Prediction-Market-Intelligence-Dashboard',
+      site: ''
+    },
+    images: {
+      gif: asset("/images/proj_gif/cnc.gif"),
+      static: asset("/images/proj_static/cnc.png"),
+      overview: asset("/images/proj_detail/cnc_data.png"),
+    },
+    demoImage: asset("/images/demo/home/cnc-system.jpg"),
+    demoImageFallback: "https://images.unsplash.com/photo-1642790551116-18e150f248e3?auto=format&fit=crop&w=400&q=80",
+    details: [
+      ["Language", "Python, JavaScript"],
+      ["Platform", "Web-based"],
+      ["Front-end", "Dashboard UI"],
+      ["Back-end", "Market data analysis pipeline"],
+    ],
+    projectHighlights: "Turns prediction market information into an operational dashboard, making pricing shifts and signal aggregation easier to inspect at a glance.",
+    emoji: "📈",
+    stackIcons: [asset("/icon/python.png"), asset("/icon/js.png"), asset("/icon/node.png"), asset("/icon/react.png")]
   },
   // Additional projects can be added here following the same structure.
 };

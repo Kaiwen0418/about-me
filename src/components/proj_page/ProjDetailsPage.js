@@ -7,6 +7,7 @@ const statusById = {
   "2": "Production",
   "3": "Embedded",
   "4": "Research",
+  "5": "Analysis",
 };
 
 const yearById = {
@@ -14,9 +15,10 @@ const yearById = {
   "2": "2023",
   "3": "2024",
   "4": "2022",
+  "5": "2025",
 };
 
-const projectIds = ["1", "2", "3", "4"];
+const projectIds = ["1", "2", "3", "4", "5"];
 
 const setFallbackImage = (event, fallbackSrc) => {
   if (!fallbackSrc || event.currentTarget.dataset.fallbackApplied === "true") {

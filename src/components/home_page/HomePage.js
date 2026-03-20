@@ -185,6 +185,7 @@ const projectPositions = {
   "2": { top: "40vh", left: "75vw" },
   "3": { top: "65vh", left: "45vw" },
   "4": { top: "75vh", left: "70vw" },
+  "5": { top: "52vh", left: "58vw" },
 };
 
 const mobileCardStyles = [
@@ -192,6 +193,7 @@ const mobileCardStyles = [
   { marginTop: "2rem" },
   {},
   { marginTop: "1.5rem" },
+  {},
 ];
 
 const setFallbackImage = (event, fallbackSrc) => {
@@ -322,10 +324,10 @@ const HomePage = () => {
         id: "2",
         ...projData["2"],
         nodeNum: "02",
-        shortTitle: "CNC System",
+        shortTitle: "Benchmark Echo",
         homeDescription:
-          "Advanced scheduling algorithm for CNC machine operations, optimizing routing and minimizing downtime.",
-        demoAlt: "Machinery parts",
+          "Agent benchmarking workspace for evaluating runs, comparing outputs, and tracking performance signals.",
+        demoAlt: "Benchmark dashboard interface",
         metaStyle: {
           transform: "translate(-20px, -6px)",
         },
@@ -334,10 +336,10 @@ const HomePage = () => {
         id: "3",
         ...projData["3"],
         nodeNum: "03",
-        shortTitle: "Embedded Sec",
+        shortTitle: "Object Echo",
         homeDescription:
-          "Hardware-level security protocol implementation for embedded IoT devices.",
-        demoAlt: "Abstract data flow",
+          "Interactive 3D device museum built to showcase hardware objects as a digital exhibition.",
+        demoAlt: "3D device museum interface",
         metaStyle: {
           transform: "translate(-14px, -4px)",
         },
@@ -352,6 +354,18 @@ const HomePage = () => {
         demoAlt: "Grid pattern",
         metaStyle: {
           transform: "translate(-18px, -8px)",
+        },
+      },
+      {
+        id: "5",
+        ...projData["5"],
+        nodeNum: "05",
+        shortTitle: "Market Dash",
+        homeDescription:
+          "Prediction market intelligence dashboard for monitoring signals, pricing changes, and market movement.",
+        demoAlt: "Prediction market dashboard",
+        metaStyle: {
+          transform: "translate(-22px, -6px)",
         },
       },
     ],
