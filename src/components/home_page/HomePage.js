@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { projData } from "../../data/data";
+import { getProjectLocale, uiText } from "../../data/translations";
 import { useDevice } from "../../utils/DeviceContext";
+import { useLanguage } from "../../utils/LanguageContext";
 
 const customStyles = {
   spreadCanvas: {
@@ -317,7 +319,10 @@ const TechItem = ({ style, num, label }) => (
   </div>
 );
 
-const MobileHome = ({ projects }) => (
+const MobileHome = ({ projects, language }) => {
+  const text = uiText[language].home;
+
+  return (
   <div style={{ position: "relative", minHeight: "100vh", padding: "5.5rem 1.25rem 3rem" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2.25rem" }}>
       <div
@@ -329,7 +334,7 @@ const MobileHome = ({ projects }) => (
           color: "#8f8b84",
         }}
       >
-        Selected Work
+        {text.selectedWork}
       </div>
       <div
         style={{
@@ -349,14 +354,11 @@ const MobileHome = ({ projects }) => (
     <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 900, textTransform: "uppercase", lineHeight: 0.82 }}>
       <div style={{ fontSize: "clamp(3.5rem, 20vw, 4.8rem)" }}>Kaiwen</div>
       <div style={{ marginLeft: "18%", fontSize: "clamp(3.5rem, 20vw, 4.8rem)" }}>Liu</div>
-      <div style={{ marginTop: "0.9rem", marginLeft: "11%", fontSize: "1rem", letterSpacing: "-0.02em" }}>Full-Stack Dev.</div>
+      <div style={{ marginTop: "0.9rem", marginLeft: "11%", fontSize: "1rem", letterSpacing: "-0.02em" }}>{text.role}</div>
     </div>
 
     <div style={{ marginTop: "1.75rem", maxWidth: "28rem" }}>
-      <div style={customStyles.bioText}>
-        User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
-        holding an EIE MEng degree. Operating at the intersection of low-level systems and front-end execution.
-      </div>
+      <div style={customStyles.bioText}>{text.bio}</div>
     </div>
 
     <div
@@ -405,7 +407,7 @@ const MobileHome = ({ projects }) => (
           color: "#8f8b84",
         }}
       >
-        Swipe for more projects
+        {text.swipeHint}
       </div>
       <div
         style={{
@@ -416,14 +418,17 @@ const MobileHome = ({ projects }) => (
           color: "#f4f2ea",
         }}
       >
-        05 Records
+        {text.records}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const HomePage = () => {
   const isMobileDevice = useDevice();
+  const { language } = useLanguage();
+  const text = uiText[language].home;
 
   const projects = useMemo(
     () => [
@@ -431,10 +436,9 @@ const HomePage = () => {
         id: "1",
         ...projData["1"],
         nodeNum: "01",
-        shortTitle: "Circuit Simulator",
-        homeDescription:
-          "Web-based logic circuit simulation tool. Real-time component evaluation and state rendering.",
-        demoAlt: "Circuit board macro",
+        shortTitle: getProjectLocale(1, language).homeShortTitle,
+        homeDescription: getProjectLocale(1, language).homeDescription,
+        demoAlt: getProjectLocale(1, language).demoAlt,
         metaStyle: {
           transform: "translate(-26px, -8px)",
         },
@@ -443,10 +447,9 @@ const HomePage = () => {
         id: "2",
         ...projData["2"],
         nodeNum: "02",
-        shortTitle: "Benchmark Echo",
-        homeDescription:
-          "Agent benchmarking workspace for evaluating runs, comparing outputs, and tracking performance signals.",
-        demoAlt: "Benchmark dashboard interface",
+        shortTitle: getProjectLocale(2, language).homeShortTitle,
+        homeDescription: getProjectLocale(2, language).homeDescription,
+        demoAlt: getProjectLocale(2, language).demoAlt,
         metaStyle: {
           transform: "translate(-20px, -6px)",
         },
@@ -455,10 +458,9 @@ const HomePage = () => {
         id: "3",
         ...projData["3"],
         nodeNum: "03",
-        shortTitle: "Object Echo",
-        homeDescription:
-          "Interactive 3D device museum built to showcase hardware objects as a digital exhibition.",
-        demoAlt: "3D device museum interface",
+        shortTitle: getProjectLocale(3, language).homeShortTitle,
+        homeDescription: getProjectLocale(3, language).homeDescription,
+        demoAlt: getProjectLocale(3, language).demoAlt,
         metaStyle: {
           transform: "translate(-14px, -4px)",
         },
@@ -467,10 +469,9 @@ const HomePage = () => {
         id: "4",
         ...projData["4"],
         nodeNum: "04",
-        shortTitle: "Math > Braille",
-        homeDescription:
-          "Optical character recognition pipeline designed specifically to translate complex mathematical formulas into Braille.",
-        demoAlt: "Grid pattern",
+        shortTitle: getProjectLocale(4, language).homeShortTitle,
+        homeDescription: getProjectLocale(4, language).homeDescription,
+        demoAlt: getProjectLocale(4, language).demoAlt,
         metaStyle: {
           transform: "translate(-18px, -8px)",
         },
@@ -479,20 +480,19 @@ const HomePage = () => {
         id: "5",
         ...projData["5"],
         nodeNum: "05",
-        shortTitle: "Market Dash",
-        homeDescription:
-          "Prediction market intelligence dashboard for monitoring signals, pricing changes, and market movement.",
-        demoAlt: "Prediction market dashboard",
+        shortTitle: getProjectLocale(5, language).homeShortTitle,
+        homeDescription: getProjectLocale(5, language).homeDescription,
+        demoAlt: getProjectLocale(5, language).demoAlt,
         metaStyle: {
           transform: "translate(-22px, -6px)",
         },
       },
     ],
-    []
+    [language]
   );
 
   if (isMobileDevice) {
-    return <MobileHome projects={projects} />;
+    return <MobileHome projects={projects} language={language} />;
   }
 
   return (
@@ -545,24 +545,20 @@ const HomePage = () => {
 
       <div style={{ ...customStyles.displayText, ...customStyles.tKaiwen }}>Kaiwen</div>
       <div style={{ ...customStyles.displayText, ...customStyles.tLiu }}>Liu</div>
-      <div style={{ ...customStyles.displayText, ...customStyles.tRole }}>Full-Stack Dev.</div>
+      <div style={{ ...customStyles.displayText, ...customStyles.tRole }}>{text.role}</div>
 
       <div style={customStyles.systemBadge}>
         <div style={customStyles.pixelAvatar} />
       </div>
 
       <div style={customStyles.bioCluster}>
-        <div style={customStyles.bioText}>
-          User profile located. <strong style={customStyles.bioStrong}>Imperial College London</strong> graduate,
-          holding an EIE MEng degree. Documented achievements include multiple high-level implementations across
-          hardware and software boundaries. Operating at the intersection of low-level systems and front-end execution.
-        </div>
+        <div style={customStyles.bioText}>{text.bio}</div>
 
         <div style={customStyles.techScatter}>
-          <TechItem style={{ top: 0, left: 0 }} num="05" label="React.js" />
-          <TechItem style={{ top: "30px", left: "80px" }} num="06" label="Node/Exp" />
-          <TechItem style={{ top: "70px", left: "20px" }} num="07" label="Python 3" />
-          <TechItem style={{ top: "110px", left: "100px" }} num="08" label="C / C++" />
+          <TechItem style={{ top: 0, left: 0 }} num="05" label={text.tech[0]} />
+          <TechItem style={{ top: "30px", left: "80px" }} num="06" label={text.tech[1]} />
+          <TechItem style={{ top: "70px", left: "20px" }} num="07" label={text.tech[2]} />
+          <TechItem style={{ top: "110px", left: "100px" }} num="08" label={text.tech[3]} />
         </div>
       </div>
 

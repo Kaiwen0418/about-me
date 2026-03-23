@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { uiText } from "../data/translations";
+import { useLanguage } from "../utils/LanguageContext";
 
 const pixelMap = [
   0, 0, 1, 1, 1, 1, 0, 0,
@@ -11,85 +13,52 @@ const pixelMap = [
   0, 0, 0, 1, 1, 0, 0, 0,
 ];
 
-const getLoadingConfig = (routePath) => {
+const getLoadingConfig = (routePath, language) => {
+  const text = uiText[language].loading;
+
   if (routePath.startsWith("/project/")) {
     return {
       version: "SYS.LOAD.PROJECT",
-      status: "Opening Project File",
-      ready: "FILE.READY",
-      lines: [
-        "> INITIALIZING CORE... OK",
-        "> LOCATING PROJECT INDEX... FOUND",
-        "> MOUNTING DETAIL RECORD... DONE",
-        "> LOADING SCREENSHOTS / METADATA...",
-        "> ANALYZING LOW-LEVEL INTERFACES...",
-        "> PARSING REACT / NODE / PYTHON / F#",
-        "> STAGING PRESENTATION LAYER...",
-        "> PROJECT FILE AUTHENTICATED.",
-      ],
+      status: text.projectOpen,
+      ready: text.ready.project,
+      lines: text.lines.project,
     };
   }
 
   if (routePath.startsWith("/project")) {
     return {
       version: "SYS.LOAD.ARCHIVE",
-      status: "Opening Project Archive",
-      ready: "ARCHIVE.READY",
-      lines: [
-        "> INITIALIZING CORE... OK",
-        "> MOUNTING PROJECT ARCHIVE... DONE",
-        "> INDEXING SELECTED WORK... 100%",
-        "> RECONCILING STACK / YEAR / STATUS...",
-        "> PREPARING EXPANDED RECORDS...",
-        "> LOADING DEMO VISUALS...",
-        "> STAGING ARCHIVE TABLE...",
-        "> ARCHIVE ACCESS AUTHENTICATED.",
-      ],
+      status: text.archiveOpen,
+      ready: text.ready.archive,
+      lines: text.lines.archive,
     };
   }
 
   if (routePath.startsWith("/about")) {
     return {
       version: "SYS.LOAD.DOSSIER",
-      status: "Opening Dossier",
-      ready: "DOSSIER.READY",
-      lines: [
-        "> INITIALIZING CORE... OK",
-        "> MOUNTING PROFILE LOG... DONE",
-        "> LOADING EDUCATION TIMELINE... 100%",
-        "> PARSING SYSTEM ATTRIBUTES...",
-        "> RESOLVING VISUAL / TECHNICAL SIGNALS...",
-        "> ESTABLISHING CONTEXT BUFFER...",
-        "> STAGING DOSSIER PANELS...",
-        "> DOSSIER AUTHENTICATED.",
-      ],
+      status: text.dossierOpen,
+      ready: text.ready.dossier,
+      lines: text.lines.about,
     };
   }
 
   return {
     version: "SYS.INIT.V1.0.42",
-    status: "Booting System",
-    ready: "SYS.READY",
-    lines: [
-      "> INITIALIZING CORE... OK",
-      "> LOADING KERNEL ASSETS... 100%",
-      "> MOUNTING HOME INDEX... DONE",
-      "> ANALYZING LOW-LEVEL INTERFACES...",
-      "> ESTABLISHING FULL-STACK PROTOCOLS...",
-      "> PARSING REACT / NODE / PYTHON / F#",
-      "> DEPLOYING VISUAL BUFFER...",
-      "> EXECUTION AUTHENTICATED.",
-    ],
+    status: text.booting,
+    ready: text.ready.home,
+    lines: text.lines.home,
   };
 };
 
 const RouteLoadingScreen = ({ visible, routePath, coverChrome = false }) => {
+  const { language } = useLanguage();
   const [percent, setPercent] = useState(0);
   const [lineCount, setLineCount] = useState(0);
   const [pixelCount, setPixelCount] = useState(0);
   const [readyVisible, setReadyVisible] = useState(false);
   const [blinkState, setBlinkState] = useState(true);
-  const config = useMemo(() => getLoadingConfig(routePath), [routePath]);
+  const config = useMemo(() => getLoadingConfig(routePath, language), [language, routePath]);
 
   const litPixelIndexes = useMemo(
     () => pixelMap.map((value, index) => (value === 1 ? index : null)).filter((value) => value !== null),

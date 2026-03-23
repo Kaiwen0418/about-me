@@ -1,4 +1,6 @@
 import React from "react";
+import { uiText } from "../data/translations";
+import { useLanguage } from "../utils/LanguageContext";
 
 const customStyles = {
   terminalContainer: {
@@ -134,20 +136,6 @@ const customStyles = {
   },
 };
 
-const timelineItems = [
-  {
-    year: "2019 — 2023",
-    inst: "Imperial College London",
-    description: "MEng Electronic & Information Engineering (EIE)",
-  },
-  {
-    year: "2023 — Present",
-    inst: "Full-Stack Development",
-    description:
-      "Specializing in high-performance web applications and embedded systems security.",
-  },
-];
-
 const skillGroups = [
   {
     path: "./skills:",
@@ -206,31 +194,29 @@ const TimelineItem = ({ year, inst, description }) => (
 );
 
 const AboutPage = () => {
+  const { language } = useLanguage();
+  const text = uiText[language].about;
+
   return (
     <div className="flex min-h-screen items-center justify-center px-8 py-24">
       <section style={customStyles.terminalContainer}>
         <div style={customStyles.scanline} />
         <div style={customStyles.terminalHeader}>
-          <span>TERMINAL: SESSION_ID_8842</span>
-          <span>LOCATION: LONDON, UK</span>
+          <span>{text.terminal}</span>
+          <span>{text.location}</span>
         </div>
 
         <div style={customStyles.terminalScrollArea}>
           <div style={customStyles.cmdLine}>
-            <span style={customStyles.prompt}>&gt; </span>cat biography.txt
+            <span style={customStyles.prompt}>&gt; </span>{text.biography}
           </div>
-          <div style={customStyles.output}>
-            Kaiwen Liu is a systems-oriented developer specializing in the friction point
-            between hardware constraints and high-level software abstractions. Educated at
-            Imperial College London, his work emphasizes efficiency, security, and low-latency
-            execution.
-          </div>
+          <div style={customStyles.output}>{text.biographyText}</div>
 
           <div style={customStyles.cmdLine}>
-            <span style={customStyles.prompt}>&gt; </span>ls --timeline education/
+            <span style={customStyles.prompt}>&gt; </span>{text.education}
           </div>
           <div style={customStyles.output}>
-            {timelineItems.map((item) => (
+            {text.timeline.map((item) => (
               <TimelineItem
                 key={item.year}
                 year={item.year}
@@ -241,7 +227,7 @@ const AboutPage = () => {
           </div>
 
           <div style={customStyles.cmdLine}>
-            <span style={customStyles.prompt}>&gt; </span>ls -R --sort=proficiency skills/
+            <span style={customStyles.prompt}>&gt; </span>{text.skills}
           </div>
           <div style={customStyles.treeView}>
             {skillGroups.map((group) => (
@@ -261,12 +247,12 @@ const AboutPage = () => {
           </div>
 
           <div style={customStyles.cmdLine}>
-            <span style={customStyles.prompt}>&gt; </span>export --file CV_2024.pdf
+            <span style={customStyles.prompt}>&gt; </span>{text.export}
             <Cursor />
           </div>
 
           <a href="mailto:kaiwenliu0418@gmail.com" style={customStyles.exportButton}>
-            &gt; Download_Sys_Manifesto.pdf
+            {text.manifesto}
           </a>
         </div>
       </section>

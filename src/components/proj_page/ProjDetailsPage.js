@@ -1,14 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { projData } from "../../data/data";
-
-const statusById = {
-  "1": "Active",
-  "2": "Production",
-  "3": "Embedded",
-  "4": "Research",
-  "5": "Analysis",
-};
+import { getProjectLocale, uiText } from "../../data/translations";
+import { useLanguage } from "../../utils/LanguageContext";
 
 const yearById = {
   "1": "2024",
@@ -30,20 +24,21 @@ const setFallbackImage = (event, fallbackSrc) => {
 };
 
 const ProjectsArchive = () => {
+  const { language } = useLanguage();
+  const text = uiText[language].project;
   const [expandedId, setExpandedId] = useState(projectIds[0]);
 
   return (
     <section className="w-full">
       <div className="mb-8 border-b border-[var(--folio-line)] pb-6 md:mb-10">
         <p className="mb-3 text-[0.72rem] uppercase tracking-[0.22em] text-[var(--folio-muted)]">
-          Selected work
+          {text.selectedWork}
         </p>
         <h1 className="folio-display text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.9]">
-          Project Archive
+          {text.archiveTitle}
         </h1>
         <p className="folio-copy mt-4 max-w-2xl">
-          A small set of software and hardware-heavy builds, organized like a technical archive:
-          compact overview first, deeper inspection on demand.
+          {text.archiveIntro}
         </p>
       </div>
 
@@ -58,6 +53,7 @@ const ProjectsArchive = () => {
 
         {projectIds.map((id) => {
           const project = projData[id];
+          const localized = getProjectLocale(Number(id), language);
           const isExpanded = expandedId === id;
 
           return (
@@ -71,14 +67,14 @@ const ProjectsArchive = () => {
                   0{id}
                 </span>
                 <span className="text-sm font-bold uppercase tracking-[0.08em] text-[var(--folio-fg)]">
-                  {project.name}
+                  {localized.name}
                 </span>
                 <span className="text-sm text-[var(--folio-muted)]">
-                  {project.details.map(([label, value]) => `${label} ${value}`).slice(0, 2).join(" / ")}
+                  {localized.details.map(([label, value]) => `${label} ${value}`).slice(0, 2).join(" / ")}
                 </span>
                 <span className="text-sm text-[var(--folio-fg)]">{yearById[id]}</span>
                 <span className="text-left text-[0.68rem] uppercase tracking-[0.18em] text-[var(--folio-accent)] md:text-right">
-                  {statusById[id]}
+                  {text.status[id]}
                 </span>
               </button>
 
@@ -93,12 +89,12 @@ const ProjectsArchive = () => {
                   <div className="space-y-4">
                     <div>
                       <p className="mb-2 text-[0.68rem] uppercase tracking-[0.18em] text-[var(--folio-muted)]">
-                        Technical overview
+                        {text.technicalOverview}
                       </p>
-                      <p className="folio-copy">{project.description}</p>
+                      <p className="folio-copy">{localized.description}</p>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      {project.details.map(([label, value]) => (
+                      {localized.details.map(([label, value]) => (
                         <span key={label} className="folio-tag">
                           {label.replace(":", "")} {value}
                         </span>
@@ -108,7 +104,7 @@ const ProjectsArchive = () => {
                       to={`/project/${id}`}
                       className="inline-flex border border-[var(--folio-fg)] px-4 py-3 text-[0.7rem] uppercase tracking-[0.18em] transition hover:bg-[var(--folio-fg)] hover:text-black"
                     >
-                      Open project file
+                      {text.openProjectFile}
                     </Link>
                   </div>
                 </div>
@@ -122,15 +118,18 @@ const ProjectsArchive = () => {
 };
 
 const ProjectDetail = ({ id }) => {
+  const { language } = useLanguage();
+  const text = uiText[language].project;
   const project = projData[id];
+  const localized = getProjectLocale(Number(id), language);
 
   const detailRows = useMemo(
     () =>
-      project.details.map(([label, value]) => ({
+      localized.details.map(([label, value]) => ({
         label: label.replace(":", ""),
         value,
       })),
-    [project.details]
+    [localized.details]
   );
 
   return (
@@ -139,20 +138,20 @@ const ProjectDetail = ({ id }) => {
         <div className="overflow-hidden border border-[var(--folio-line)]">
           <img
             src={project.images.gif}
-            alt={project.name}
+            alt={localized.name}
             className="h-52 w-full object-cover grayscale sm:h-64 lg:h-72"
           />
         </div>
 
         <div>
           <p className="mb-3 text-[0.72rem] uppercase tracking-[0.2em] text-[var(--folio-muted)]">
-            Project record / {yearById[id]} / {statusById[id]}
+            {text.projectRecord} / {yearById[id]} / {text.status[id]}
           </p>
           <h1 className="folio-display text-[clamp(2.1rem,7vw,5.25rem)] leading-[0.9]">
-            {project.name}
+            {localized.name}
           </h1>
           <p className="mt-3 text-[0.78rem] uppercase tracking-[0.18em] text-[var(--folio-accent)] sm:mt-4 sm:text-[0.85rem]">
-            {project.brief}
+            {localized.brief}
           </p>
         </div>
 
@@ -173,9 +172,9 @@ const ProjectDetail = ({ id }) => {
               href={project.url.github}
               target="_blank"
               rel="noreferrer"
-              className="border border-[var(--folio-fg)] px-4 py-3 text-center text-[0.7rem] uppercase tracking-[0.18em] transition hover:bg-[var(--folio-fg)] hover:text-black"
-            >
-              View source
+            className="border border-[var(--folio-fg)] px-4 py-3 text-center text-[0.7rem] uppercase tracking-[0.18em] transition hover:bg-[var(--folio-fg)] hover:text-black"
+          >
+              {text.viewSource}
             </a>
           ) : null}
           {project.url.site ? (
@@ -185,14 +184,14 @@ const ProjectDetail = ({ id }) => {
               rel="noreferrer"
               className="border border-[var(--folio-line)] px-4 py-3 text-center text-[0.7rem] uppercase tracking-[0.18em] transition hover:border-[var(--folio-fg)]"
             >
-              Open site
+              {text.openSite}
             </a>
           ) : null}
           <Link
             to="/project"
             className="border border-[var(--folio-line)] px-4 py-3 text-center text-[0.7rem] uppercase tracking-[0.18em] transition hover:border-[var(--folio-fg)]"
           >
-            Back to archive
+            {text.backToArchive}
           </Link>
         </div>
       </div>
@@ -207,7 +206,7 @@ const ProjectDetail = ({ id }) => {
           <div className="grid min-h-[16rem] place-items-center bg-[linear-gradient(#ece8dd_1px,transparent_1px),linear-gradient(90deg,#ece8dd_1px,transparent_1px)] bg-[size:24px_24px] p-4 sm:min-h-[20rem] sm:p-6 md:min-h-[24rem]">
             <img
               src={project.images.overview}
-              alt={`${project.name} overview`}
+              alt={`${localized.name} overview`}
               className="max-h-[28rem] w-full max-w-3xl object-contain shadow-[0_32px_80px_rgba(0,0,0,0.35)]"
             />
           </div>
@@ -216,15 +215,15 @@ const ProjectDetail = ({ id }) => {
         <div className="grid gap-6 md:grid-cols-2">
           <div>
             <p className="mb-3 text-[0.72rem] uppercase tracking-[0.2em] text-[var(--folio-muted)]">
-              Description
+              {text.description}
             </p>
-            <p className="folio-copy">{project.description}</p>
+            <p className="folio-copy">{localized.description}</p>
           </div>
           <div>
             <p className="mb-3 text-[0.72rem] uppercase tracking-[0.2em] text-[var(--folio-muted)]">
-              Notes
+              {text.notes}
             </p>
-            <p className="folio-copy">{project.projectHighlights}</p>
+            <p className="folio-copy">{localized.projectHighlights}</p>
           </div>
         </div>
       </div>

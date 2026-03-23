@@ -5,16 +5,20 @@ import ProjDetailsPage from "./components/proj_page/ProjDetailsPage";
 import NotFoundPage from "./components/NotFoundPage"; 
 import RouteLoadingScreen from "./components/RouteLoadingScreen";
 import SiteShell from "./components/SiteShell";
+import { uiText } from "./data/translations";
+import { LanguageProvider, useLanguage } from "./utils/LanguageContext";
 import "./globals.css";
 
-const getShellConfig = (pathname) => {
+const getShellConfig = (pathname, language) => {
+  const text = uiText[language].shell;
+
   if (pathname.startsWith("/project/")) {
     const id = pathname.split("/")[2] || "00";
 
     return {
-      section: "Project File",
+      section: text.projectFile,
       sectionCode: `SYS.V2 LOG_0${id}`,
-      footerLabel: "London, UK",
+      footerLabel: text.location,
       footerMeta: "2026",
       fullBleed: false,
     };
@@ -22,9 +26,9 @@ const getShellConfig = (pathname) => {
 
   if (pathname.startsWith("/project")) {
     return {
-      section: "Projects",
+      section: text.archive,
       sectionCode: "SYS.V2 ARCHIVE",
-      footerLabel: "London, UK",
+      footerLabel: text.location,
       footerMeta: "",
       fullBleed: true,
     };
@@ -32,9 +36,9 @@ const getShellConfig = (pathname) => {
 
   if (pathname.startsWith("/about")) {
     return {
-      section: "About Me",
+      section: text.about,
       sectionCode: "Sys.v1.0",
-      footerLabel: "Index: KL-ABOUT",
+      footerLabel: text.indexAbout,
       footerMeta: "",
       fullBleed: true,
     };
@@ -42,18 +46,18 @@ const getShellConfig = (pathname) => {
 
   if (pathname === "/") {
     return {
-      section: "Home",
+      section: text.home,
       sectionCode: "Sys.v1.0",
-      footerLabel: "Index: KL-2024",
+      footerLabel: text.indexHome,
       footerMeta: "",
       fullBleed: true,
     };
   }
 
   return {
-    section: "Missing",
+    section: text.missing,
     sectionCode: "SYS.V2 404",
-    footerLabel: "London, UK",
+    footerLabel: text.location,
     footerMeta: "2026",
     fullBleed: false,
   };
@@ -61,10 +65,11 @@ const getShellConfig = (pathname) => {
 
 const RoutedApp = () => {
   const location = useLocation();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [coverChrome, setCoverChrome] = useState(true);
   const hasMountedRef = useRef(false);
-  const shellConfig = useMemo(() => getShellConfig(location.pathname), [location.pathname]);
+  const shellConfig = useMemo(() => getShellConfig(location.pathname, language), [language, location.pathname]);
   const skipLoader = Boolean(location.state && location.state.skipLoader);
 
   useLayoutEffect(() => {
@@ -108,11 +113,13 @@ const RoutedApp = () => {
 
 const App = () => {
   return (
-    <div>
-      <Router>
-        <RoutedApp />
-      </Router>
-    </div>
+    <LanguageProvider>
+      <div>
+        <Router>
+          <RoutedApp />
+        </Router>
+      </div>
+    </LanguageProvider>
   );
 };
 

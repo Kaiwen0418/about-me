@@ -1,12 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDevice } from "../utils/DeviceContext";
-
-const navItems = [
-  { label: "Home", to: "/" },
-  { label: "Projects", to: "/project" },
-  { label: "About Me", to: "/about" },
-];
+import { uiText } from "../data/translations";
+import { useLanguage } from "../utils/LanguageContext";
 
 const SiteShell = ({
   children,
@@ -19,6 +15,13 @@ const SiteShell = ({
 }) => {
   const location = useLocation();
   const isMobileDevice = useDevice();
+  const { language, toggleLanguage } = useLanguage();
+  const text = uiText[language].shell;
+  const navItems = [
+    { label: text.home, mobileLabel: text.home, to: "/" },
+    { label: text.projects, mobileLabel: text.work, to: "/project" },
+    { label: text.about, mobileLabel: text.about, to: "/about" },
+  ];
 
   const isActive = (to) => {
     if (to === "/") {
@@ -43,15 +46,12 @@ const SiteShell = ({
             to={item.to}
             className={`folio-link ${isActive(item.to) ? "folio-link-active" : ""}`}
           >
-            {isMobileDevice
-              ? item.to === "/project"
-                ? "Work"
-                : item.to === "/about"
-                  ? "About"
-                  : item.label
-              : item.label}
+            {isMobileDevice ? item.mobileLabel : item.label}
           </Link>
         ))}
+        <button type="button" onClick={toggleLanguage} className="folio-link border-0 bg-transparent p-0">
+          {language === "en" ? "中" : "EN"}
+        </button>
       </nav>
 
       <main
