@@ -175,8 +175,7 @@ const customStyles = {
   pixelAvatar: {
     width: "32px",
     height: "32px",
-    backgroundImage:
-      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23F4F4F4' d='M2 0h4v1H2zm-1 1h1v1H1zm5 0h1v1H6zM1 2h1v1H1zm5 0h1v1H6zM0 3h2v1H0zm6 0h2v1H6zM0 4h1v1H0zm2 0h1v1H2zm3 0h1v1H5zm2 0h1v1H7zM1 5h1v1H1zm5 0h1v1H6zM2 6h1v1H2zm3 0h1v1H5z'/%3E%3C/svg%3E\")",
+    backgroundImage: `url("${process.env.PUBLIC_URL}/images/pixel-avatar.svg")`,
     backgroundSize: "cover",
     imageRendering: "pixelated",
   },
@@ -497,46 +496,46 @@ const HomePage = () => {
 
   return (
     <div style={customStyles.spreadCanvas}>
-      <svg style={customStyles.mapLines}>
+      <svg style={customStyles.mapLines} viewBox="0 0 100 100" preserveAspectRatio="none">
         <path
-          d="M 58vw 15vh C 66vw 15vh, 66vw 40vh, 75vw 40vh"
+          d="M 58 15 C 66 15, 66 40, 75 40"
           stroke="rgba(244,244,244,0.15)"
           strokeWidth="1px"
           fill="none"
           strokeDasharray="4 4"
         />
         <line
-          x1="15vw"
-          y1="75vh"
-          x2="45vw"
-          y2="65vh"
+          x1="15"
+          y1="75"
+          x2="45"
+          y2="65"
           stroke="rgba(244,244,244,0.15)"
           strokeWidth="1px"
           strokeDasharray="4 4"
         />
         <line
-          x1="75vw"
-          y1="45vh"
-          x2="70vw"
-          y2="75vh"
+          x1="75"
+          y1="45"
+          x2="70"
+          y2="75"
           stroke="rgba(244,244,244,0.15)"
           strokeWidth="1px"
           strokeDasharray="4 4"
         />
         <line
-          x1="34vw"
-          y1="42vh"
-          x2="45vw"
-          y2="42vh"
+          x1="34"
+          y1="42"
+          x2="45"
+          y2="42"
           stroke="rgba(244,244,244,0.15)"
           strokeWidth="1px"
           strokeDasharray="4 4"
         />
         <line
-          x1="85vw"
+          x1="85"
           y1="0"
-          x2="85vw"
-          y2="100vh"
+          x2="85"
+          y2="100"
           stroke="rgba(244,244,244,0.15)"
           strokeWidth="1px"
           strokeDasharray="2 10"

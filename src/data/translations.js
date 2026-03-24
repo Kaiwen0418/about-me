@@ -42,6 +42,13 @@ export const uiText = {
         5: "Analysis",
       },
     },
+    notFound: {
+      label: "Requested file unavailable",
+      body:
+        "The page you requested is not part of the active folio anymore. Return to the main index or browse the current project archive.",
+      backHome: "Back to home",
+      viewProjects: "View projects",
+    },
     about: {
       terminal: "TERMINAL: SESSION_ID_8842",
       location: "LOCATION: LONDON, UK",
@@ -162,6 +169,13 @@ export const uiText = {
         4: "研究型",
         5: "分析型",
       },
+    },
+    notFound: {
+      label: "请求文件不可用",
+      body:
+        "你访问的页面已经不在当前作品集中。可以返回主索引，或者查看当前项目档案库。",
+      backHome: "返回首页",
+      viewProjects: "查看项目",
     },
     about: {
       terminal: "终端: SESSION_ID_8842",
