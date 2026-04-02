@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { useDevice } from '../../utils/DeviceContext'; // Ensure the context hook is correctly imported
 import { projData, iconList } from "../../data/data";
+import { getProjectLocale } from "../../data/translations";
+import { useLanguage } from "../../utils/LanguageContext";
 
 const ProjectCard = ({ id, proj }) => {
     const isMobileDevice = useDevice(); // Using the context to determine if it's a mobile device
+    const { language } = useLanguage();
+    const localized = getProjectLocale(Number(id), language);
 
     const CardBrief = (                
         <div className="w-1/2 m-auto pl-2">  {/* Added pl-5 for padding left 20px */}
-            <h1>{proj.name}</h1>
+            <h1>{localized.name}</h1>
             <p className="text-xs mb-5 ">  {/* Added mr-5 for margin right 20px */}
-                {proj.brief}
+                {localized.brief}
             </p>
             <div className="grid grid-cols-4 gap-2 mt-2">
                             {iconList.slice(0,3).map((icon, index) => (
@@ -27,7 +31,7 @@ const ProjectCard = ({ id, proj }) => {
                 <img
                     className="w-1/2 h-4/5 object-cover m-auto"
                     src={proj.images.gif} // Path to your static image
-                    alt={proj.name}
+                    alt={localized.name}
                 />
                 { CardBrief }
             </div>

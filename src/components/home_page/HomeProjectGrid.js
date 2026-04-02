@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useDevice } from '../../utils/DeviceContext'; // Ensure the context hook is correctly imported
 import { projData } from "../../data/data";
+import { getProjectLocale, uiText } from "../../data/translations";
+import { useLanguage } from "../../utils/LanguageContext";
 
 const githubIcon = `${process.env.PUBLIC_URL}/images/github-icon.png`;
 
 const ProjectCard = ({ id, proj, curHovered, handleMouseEnter, handleMouseLeave }) => {
     const isMobileDevice = useDevice(); // Using the context to determine if it's a mobile device
+    const { language } = useLanguage();
+    const localized = getProjectLocale(Number(id), language);
+    const text = uiText[language].legacy;
 
     const isHovered = (curHovered === id)
     const otherHovered = (curHovered !== id && curHovered !== null)
@@ -17,12 +22,12 @@ const ProjectCard = ({ id, proj, curHovered, handleMouseEnter, handleMouseLeave 
                 <img
                     className="w-1/2 h-4/5 object-cover m-auto"
                     src={proj.images.gif} // Path to your static image
-                    alt={proj.name}
+                    alt={localized.name}
                 />
                 <div className="w-1/2 m-auto pl-2">  {/* Added pl-5 for padding left 20px */}
-                    <h1>Project: </h1>
+                    <h1>{text.project}: </h1>
                     <p className="text-xs mb-5 ">  {/* Added mr-5 for margin right 20px */}
-                        {proj.brief}
+                        {localized.brief}
                     </p>
                     <p 
                     className='text-center text-xl scale-x-400 animate-blink m-auto'
@@ -51,11 +56,11 @@ const ProjectCard = ({ id, proj, curHovered, handleMouseEnter, handleMouseLeave 
                 <img
                     className="w-4/5 h-4/5 object-cover m-auto"
                     src={isHovered ? proj.images.gif : proj.images.static} // Path to your static image
-                    alt={proj.name}
+                    alt={localized.name}
                 />
                 <div className="flex items-center w-4/5 m-auto pl-2">  {/* Added pl-5 for padding left 20px */}
                     <p className="text-xs mr-1 mt--1">  {/* Added mr-5 for margin right 20px */}
-                        {proj.name}
+                        {localized.name}
                     </p>
                     <img
                         src={githubIcon}

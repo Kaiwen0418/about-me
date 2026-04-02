@@ -1,16 +1,20 @@
 import React from "react";
 import { personalProfile, iconList } from "../../data/data";
+import { uiText } from "../../data/translations";
+import { useLanguage } from "../../utils/LanguageContext";
 import DottedBox from "../DottedBox";
 // import MyGitHubHeatmap from './Heatmap';
 
 const PersonalProfile = () => {
+    const { language } = useLanguage();
+    const text = uiText[language];
     const profile = personalProfile[1]
 
     if (!profile) {
-        return <div>Profile not found</div>;
+        return <div>{text.legacy.profileNotFound}</div>;
     }
 
-    const details = profile.details
+    const details = text.profile.details
 
     const detailSection = (
         <div className="flex flex-col justify-center items-center ">
@@ -23,7 +27,7 @@ const PersonalProfile = () => {
                         </tr>
                     ))}
                     <tr key={'tech'} className="mt-2">
-                        <td className="text-right pr-2">{'Tech-stack:'}</td>
+                        <td className="text-right pr-2">{text.legacy.techStack}</td>
                         <td className="text-left ">
                             <div className="grid grid-cols-4 gap-2 mt-2">
                                 {iconList.map((icon, index) => (
@@ -40,8 +44,8 @@ const PersonalProfile = () => {
 
     return (
         <DottedBox
-            title={profile.name}
-            subtitle={profile.alias}
+            title={text.profile.name}
+            subtitle={text.profile.alias}
             paddingTop="pt-14"
             titleSize="text-3xl"
         >
@@ -49,7 +53,7 @@ const PersonalProfile = () => {
                 <div className="w-36 h-36 overflow-hidden border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
                     <img
                         src={profile.images.avatar}
-                        alt={`${profile.name} pixel`}
+                        alt={`${text.profile.name} pixel`}
                         className="w-full h-full object-cover"
                     />
                 </div>

@@ -1,11 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDevice } from '../utils/DeviceContext';
+import { uiText } from "../data/translations";
+import { useLanguage } from "../utils/LanguageContext";
 
 
 const RetroWindowWrapper = ({ children, activeTab }) => {
-  const menuItems = ["Home", "Project", "More", "About"];
   const isMobileDevice = useDevice();
+  const { language } = useLanguage();
+  const text = uiText[language].legacy;
+  const menuItems = [
+    { key: "Home", label: text.tabs.home, to: "/" },
+    { key: "Project", label: text.tabs.project, to: "/project" },
+    { key: "More", label: text.tabs.more, to: "/more" },
+    { key: "About", label: text.tabs.about, to: "/about" },
+  ];
 
   const scrollbar = (
     <div className="absolute top-0 right-0 bottom-0 w-4 bg-gray-200 border-l-2 border-black">
@@ -21,7 +30,7 @@ const RetroWindowWrapper = ({ children, activeTab }) => {
         <a href="mailto:kaiwenliu0418@gmail.com" className="hover:underline">Email</a>
       </div>
       {!isMobileDevice && <div className="mr-4">
-        Powered by React and Tailwind
+        {text.poweredBy}
       </div>}
     </div>
   )
@@ -41,14 +50,14 @@ const RetroWindowWrapper = ({ children, activeTab }) => {
           <div className="flex space-x-4 text-xs">
             {menuItems.map((item) => (
               <Link
-                key={item}
-                to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className={`px-2 py-1 ${activeTab === item
+                key={item.key}
+                to={item.to}
+                className={`px-2 py-1 ${activeTab === item.key
                     ? "bg-black text-white"
                     : "hover:bg-black hover:text-white"
                   }`}
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>
