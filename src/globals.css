@@ -4,12 +4,34 @@
 
 :root {
   --folio-bg: #0a0a0b;
+  --folio-bg-rgb: 10, 10, 11;
+  --folio-surface: #090909;
   --folio-fg: #f4f2ea;
   --folio-muted: #8f8b84;
   --folio-line: rgba(244, 242, 234, 0.14);
   --folio-panel: rgba(255, 255, 255, 0.03);
   --folio-soft: rgba(255, 255, 255, 0.06);
   --folio-accent: #d7cfbd;
+  --folio-inverse: #090909;
+  --folio-window-bg: #faf7f0;
+  --folio-window-line: #ece8dd;
+  --folio-window-dot: #d8d2c5;
+}
+
+:root[data-theme="light"] {
+  --folio-bg: #f5efe3;
+  --folio-bg-rgb: 245, 239, 227;
+  --folio-surface: #f0e8da;
+  --folio-fg: #16130f;
+  --folio-muted: #6f6557;
+  --folio-line: rgba(22, 19, 15, 0.14);
+  --folio-panel: rgba(255, 255, 255, 0.45);
+  --folio-soft: rgba(22, 19, 15, 0.06);
+  --folio-accent: #725e45;
+  --folio-inverse: #f5efe3;
+  --folio-window-bg: #fffdf7;
+  --folio-window-line: #d9d0bf;
+  --folio-window-dot: #b9ae98;
 }
 
 html {
@@ -21,7 +43,7 @@ body, button, input, textarea {
 }
 
 body {
-  background-color: #090909;
+  background-color: var(--folio-bg);
   color: var(--folio-fg);
 }
 
@@ -32,14 +54,14 @@ body {
 .folio-shell {
   position: relative;
   overflow: hidden;
-  background-color: #090909;
+  background-color: var(--folio-bg);
   cursor: crosshair;
 }
 
 .folio-canvas {
   width: 100vw;
   min-height: 100vh;
-  background-color: #090909;
+  background-color: var(--folio-bg);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   background-size: 200px 200px;
   background-repeat: repeat;

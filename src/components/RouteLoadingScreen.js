@@ -134,12 +134,13 @@ const RouteLoadingScreen = ({ visible, routePath, coverChrome = false }) => {
       style={{
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
+        backgroundColor: "var(--folio-bg)",
         backgroundImage:
           "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E\")",
       }}
       aria-hidden={!visible}
     >
-      <div className="absolute left-8 top-8 text-[0.65rem] uppercase tracking-[0.15em] text-[#444] md:left-8 md:top-8">
+      <div className="absolute left-8 top-8 text-[0.65rem] uppercase tracking-[0.15em] text-[var(--folio-muted)] md:left-8 md:top-8">
         {config.version}
       </div>
 
@@ -165,7 +166,7 @@ const RouteLoadingScreen = ({ visible, routePath, coverChrome = false }) => {
           })}
         </div>
 
-        <div className="h-[120px] overflow-hidden text-[0.7rem] uppercase tracking-[0.05em] text-[#444]">
+        <div className="h-[120px] overflow-hidden text-[0.7rem] uppercase tracking-[0.05em] text-[var(--folio-muted)]">
           {config.lines.map((line, index) => {
             const active = index === config.lines.length - 1;
             const shown = index < lineCount;
@@ -178,7 +179,7 @@ const RouteLoadingScreen = ({ visible, routePath, coverChrome = false }) => {
                   opacity: shown ? 1 : 0,
                   transform: shown ? "translateY(0)" : "translateY(5px)",
                   transition: "opacity 0.12s ease, transform 0.12s ease",
-                  color: active && shown ? "#F4F4F4" : "#444444",
+                  color: active && shown ? "var(--folio-fg)" : "var(--folio-muted)",
                 }}
               >
                 {line}
@@ -188,13 +189,13 @@ const RouteLoadingScreen = ({ visible, routePath, coverChrome = false }) => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="relative h-[2px] w-full bg-[rgba(244,244,244,0.15)]">
+          <div className="relative h-[2px] w-full bg-[var(--folio-line)]">
             <div
-              className="absolute left-0 top-0 h-full bg-[#F4F4F4] transition-[width] duration-150 ease-out"
+              className="absolute left-0 top-0 h-full bg-[var(--folio-fg)] transition-[width] duration-150 ease-out"
               style={{ width: `${percent}%` }}
             />
           </div>
-          <div className="flex justify-between text-[0.6rem] uppercase tracking-[0.08em] text-[#444]">
+          <div className="flex justify-between text-[0.6rem] uppercase tracking-[0.08em] text-[var(--folio-muted)]">
             <span>{config.status}</span>
             <span>{percent}%</span>
           </div>
@@ -204,7 +205,7 @@ const RouteLoadingScreen = ({ visible, routePath, coverChrome = false }) => {
           className="text-center font-['Inter',-apple-system,sans-serif] text-[0.8rem] font-black uppercase tracking-[0.2em]"
           style={{
             opacity: readyVisible ? 1 : 0,
-            color: blinkState ? "#F4F4F4" : "transparent",
+            color: blinkState ? "var(--folio-fg)" : "transparent",
             transition: "opacity 0.3s ease",
           }}
         >

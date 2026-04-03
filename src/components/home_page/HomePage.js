@@ -10,7 +10,7 @@ const customStyles = {
     position: "relative",
     width: "100vw",
     minHeight: "100vh",
-    background: "linear-gradient(90deg, transparent 49.9%, rgba(244,244,244,0.15) 50%, transparent 50.1%)",
+    background: "linear-gradient(90deg, transparent 49.9%, var(--folio-line) 50%, transparent 50.1%)",
     isolation: "isolate",
   },
   mapLines: {
@@ -29,7 +29,7 @@ const customStyles = {
     textTransform: "uppercase",
     lineHeight: 0.85,
     letterSpacing: "-0.04em",
-    color: "#F4F4F4",
+    color: "var(--folio-fg)",
     whiteSpace: "nowrap",
     zIndex: 10,
   },
@@ -64,12 +64,12 @@ const customStyles = {
     fontFamily: "'Courier Prime', monospace",
     fontSize: "0.85rem",
     lineHeight: 1.5,
-    color: "#888888",
+    color: "var(--folio-muted)",
     marginBottom: "2rem",
     textAlign: "justify",
   },
   bioStrong: {
-    color: "#F4F4F4",
+    color: "var(--folio-fg)",
     fontWeight: "normal",
   },
   node: {
@@ -79,8 +79,8 @@ const customStyles = {
     width: "24px",
     height: "24px",
     borderRadius: "50%",
-    backgroundColor: "#F4F4F4",
-    color: "#090909",
+    backgroundColor: "var(--folio-fg)",
+    color: "var(--folio-inverse)",
     fontFamily: "'Inter', -apple-system, sans-serif",
     fontWeight: 900,
     fontSize: "0.65rem",
@@ -94,7 +94,7 @@ const customStyles = {
     fontSize: "0.65rem",
     textTransform: "uppercase",
     letterSpacing: "0.1em",
-    color: "#F4F4F4",
+    color: "var(--folio-fg)",
     marginLeft: "0.75rem",
   },
   techScatter: {
@@ -129,7 +129,7 @@ const customStyles = {
     zIndex: 2,
     overflow: "hidden",
     filter: "grayscale(100%) contrast(200%) brightness(80%)",
-    border: "1px solid rgba(255,255,255,0.2)",
+    border: "1px solid var(--folio-line)",
   },
   projImg: {
     width: "100%",
@@ -150,7 +150,7 @@ const customStyles = {
     fontFamily: "'Courier Prime', monospace",
     fontSize: "0.75rem",
     lineHeight: 1.4,
-    color: "#888888",
+    color: "var(--folio-muted)",
     marginLeft: "calc(24px + 0.75rem)",
   },
   systemBadge: {
@@ -159,7 +159,7 @@ const customStyles = {
     left: "30vw",
     width: "80px",
     height: "80px",
-    border: "1px solid rgba(244, 244, 244, 0.15)",
+    border: "1px solid var(--folio-line)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -167,9 +167,9 @@ const customStyles = {
     fontSize: "0.5rem",
     textAlign: "center",
     lineHeight: 1.2,
-    color: "#888888",
+    color: "var(--folio-muted)",
     borderRadius: "50%",
-    background: "#090909",
+    background: "var(--folio-bg)",
     zIndex: 15,
   },
   pixelAvatar: {
@@ -244,8 +244,8 @@ const ProjectCard = ({ project, style, isMobile = false }) => {
         width: "100%",
         maxWidth: "none",
         padding: "0.9rem",
-        border: "1px solid rgba(244,244,244,0.14)",
-        background: "rgba(255,255,255,0.02)",
+        border: "1px solid var(--folio-line)",
+        background: "var(--folio-panel)",
       }
     : { ...customStyles.projectCluster, ...style };
 
@@ -297,7 +297,7 @@ const ProjectCard = ({ project, style, isMobile = false }) => {
               mixBlendMode: "difference",
               position: "relative",
               zIndex: 30,
-              color: "#ffffff",
+              color: "var(--folio-fg)",
               display: "inline-block",
               fontSize: isMobile ? "0.72rem" : customStyles.label.fontSize,
             }}
@@ -330,7 +330,7 @@ const MobileHome = ({ projects, language }) => {
           fontSize: "0.66rem",
           textTransform: "uppercase",
           letterSpacing: "0.14em",
-          color: "#8f8b84",
+          color: "var(--folio-muted)",
         }}
       >
         {text.selectedWork}
@@ -339,7 +339,7 @@ const MobileHome = ({ projects, language }) => {
         style={{
           width: "40px",
           height: "40px",
-          border: "1px solid rgba(244,244,244,0.14)",
+          border: "1px solid var(--folio-line)",
           borderRadius: "50%",
           display: "flex",
           alignItems: "center",
@@ -403,7 +403,7 @@ const MobileHome = ({ projects, language }) => {
           fontSize: "0.58rem",
           textTransform: "uppercase",
           letterSpacing: "0.12em",
-          color: "#8f8b84",
+          color: "var(--folio-muted)",
         }}
       >
         {text.swipeHint}
@@ -414,7 +414,7 @@ const MobileHome = ({ projects, language }) => {
           fontSize: "0.58rem",
           textTransform: "uppercase",
           letterSpacing: "0.12em",
-          color: "#f4f2ea",
+          color: "var(--folio-fg)",
         }}
       >
         {text.records}
@@ -499,7 +499,7 @@ const HomePage = () => {
       <svg style={customStyles.mapLines} viewBox="0 0 100 100" preserveAspectRatio="none">
         <path
           d="M 58 15 C 66 15, 66 40, 75 40"
-          stroke="rgba(244,244,244,0.15)"
+          stroke="var(--folio-line)"
           strokeWidth="1px"
           fill="none"
           strokeDasharray="4 4"
@@ -509,7 +509,7 @@ const HomePage = () => {
           y1="75"
           x2="45"
           y2="65"
-          stroke="rgba(244,244,244,0.15)"
+          stroke="var(--folio-line)"
           strokeWidth="1px"
           strokeDasharray="4 4"
         />
@@ -518,7 +518,7 @@ const HomePage = () => {
           y1="45"
           x2="70"
           y2="75"
-          stroke="rgba(244,244,244,0.15)"
+          stroke="var(--folio-line)"
           strokeWidth="1px"
           strokeDasharray="4 4"
         />
@@ -527,7 +527,7 @@ const HomePage = () => {
           y1="42"
           x2="45"
           y2="42"
-          stroke="rgba(244,244,244,0.15)"
+          stroke="var(--folio-line)"
           strokeWidth="1px"
           strokeDasharray="4 4"
         />
@@ -536,7 +536,7 @@ const HomePage = () => {
           y1="0"
           x2="85"
           y2="100"
-          stroke="rgba(244,244,244,0.15)"
+          stroke="var(--folio-line)"
           strokeWidth="1px"
           strokeDasharray="2 10"
         />

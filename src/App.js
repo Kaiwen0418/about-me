@@ -7,6 +7,7 @@ import RouteLoadingScreen from "./components/RouteLoadingScreen";
 import SiteShell from "./components/SiteShell";
 import { uiText } from "./data/translations";
 import { LanguageProvider, useLanguage } from "./utils/LanguageContext";
+import { ThemeProvider } from "./utils/ThemeContext";
 import "./globals.css";
 
 const getShellConfig = (pathname, language) => {
@@ -113,13 +114,15 @@ const RoutedApp = () => {
 
 const App = () => {
   return (
-    <LanguageProvider>
-      <div>
-        <Router>
-          <RoutedApp />
-        </Router>
-      </div>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <div>
+          <Router>
+            <RoutedApp />
+          </Router>
+        </div>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 };
 

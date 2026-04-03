@@ -82,7 +82,7 @@ const ProjectsArchive = () => {
                 <div className="grid gap-5 bg-white/[0.02] px-4 pb-5 md:grid-cols-[260px_minmax(0,1fr)] md:gap-6 md:px-5 md:pb-6">
                   <img
                     src={project.demoImage}
-                    alt={project.name}
+                    alt={localized.name}
                     className="h-32 w-full border border-[var(--folio-line)] object-cover grayscale sm:h-40"
                     onError={(event) => setFallbackImage(event, project.demoImageFallback)}
                   />
@@ -198,12 +198,23 @@ const ProjectDetail = ({ id }) => {
 
       <div className="flex flex-col justify-between gap-6 lg:gap-8 lg:pl-2">
         <div className="folio-panel overflow-hidden">
-          <div className="flex items-center gap-2 border-b border-[#ece8dd] bg-[#faf7f0] px-4 py-3">
-            <span className="h-2 w-2 rounded-full bg-[#d8d2c5]" />
-            <span className="h-2 w-2 rounded-full bg-[#d8d2c5]" />
-            <span className="h-2 w-2 rounded-full bg-[#d8d2c5]" />
+          <div
+            className="flex items-center gap-2 border-b px-4 py-3"
+            style={{ borderColor: "var(--folio-window-line)", background: "var(--folio-window-bg)" }}
+          >
+            <span className="h-2 w-2 rounded-full" style={{ background: "var(--folio-window-dot)" }} />
+            <span className="h-2 w-2 rounded-full" style={{ background: "var(--folio-window-dot)" }} />
+            <span className="h-2 w-2 rounded-full" style={{ background: "var(--folio-window-dot)" }} />
           </div>
-          <div className="grid min-h-[16rem] place-items-center bg-[linear-gradient(#ece8dd_1px,transparent_1px),linear-gradient(90deg,#ece8dd_1px,transparent_1px)] bg-[size:24px_24px] p-4 sm:min-h-[20rem] sm:p-6 md:min-h-[24rem]">
+          <div
+            className="grid min-h-[16rem] place-items-center p-4 sm:min-h-[20rem] sm:p-6 md:min-h-[24rem]"
+            style={{
+              backgroundImage:
+                "linear-gradient(var(--folio-window-line) 1px, transparent 1px), linear-gradient(90deg, var(--folio-window-line) 1px, transparent 1px)",
+              backgroundSize: "24px 24px",
+              backgroundColor: "var(--folio-window-bg)",
+            }}
+          >
             <img
               src={project.images.overview}
               alt={`${localized.name} overview`}

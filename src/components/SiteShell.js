@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useDevice } from "../utils/DeviceContext";
 import { uiText } from "../data/translations";
 import { useLanguage } from "../utils/LanguageContext";
+import { useTheme } from "../utils/ThemeContext";
 
 const SiteShell = ({
   children,
@@ -16,6 +17,7 @@ const SiteShell = ({
   const location = useLocation();
   const isMobileDevice = useDevice();
   const { language, toggleLanguage } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const text = uiText[language].shell;
   const navItems = [
     { label: text.home, mobileLabel: text.home, to: "/" },
@@ -49,6 +51,9 @@ const SiteShell = ({
             {isMobileDevice ? item.mobileLabel : item.label}
           </Link>
         ))}
+        <button type="button" onClick={toggleTheme} className="folio-link border-0 bg-transparent p-0">
+          {theme === "dark" ? text.lightMode : text.darkMode}
+        </button>
         <button type="button" onClick={toggleLanguage} className="folio-link border-0 bg-transparent p-0">
           {language === "en" ? "中" : "EN"}
         </button>
