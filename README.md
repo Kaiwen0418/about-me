@@ -1,44 +1,90 @@
-# Personal Site
+# Personal Site Pixel
 
-This is a Create React App project configured for GitHub Pages deployment.
+Portfolio site built with React, Tailwind CSS, and hash-based routing for GitHub Pages.
+
+## Current Features
+
+- Bilingual UI toggle: English / 中文
+- Global theme toggle: dark / light
+- Mobile-first landing page with horizontal project rail
+- Project archive and per-project detail views
+- GitHub Pages-friendly hash routing
+- Pixel / terminal / archival visual system
+
+## Project Highlights
+
+The current project set includes:
+
+- `Circuit Simulator`
+- `Benchmark Echo`
+- `Object Echo`
+- `Math to Braille OCR`
+- `Prediction Market Intelligence Dashboard`
+
+Project metadata and links are defined in [`src/data/data.js`](/Users/blueberryncherry/Proj/personal_site_pixel/src/data/data.js), with localized copy in [`src/data/translations.js`](/Users/blueberryncherry/Proj/personal_site_pixel/src/data/translations.js).
+
+## Tech Stack
+
+- React 18
+- React Router 6
+- Tailwind CSS
+- Create React App
+
+App-wide providers are set up in [`src/App.js`](/Users/blueberryncherry/Proj/personal_site_pixel/src/App.js):
+
+- [`LanguageProvider`](/Users/blueberryncherry/Proj/personal_site_pixel/src/utils/LanguageContext.js)
+- [`ThemeProvider`](/Users/blueberryncherry/Proj/personal_site_pixel/src/utils/ThemeContext.js)
 
 ## Development
 
-In the project directory, you can run:
+Install dependencies with:
 
-### `npm start`
+```bash
+npm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Run the local dev server:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm start
+```
 
-### `npm test`
+Create a production build:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm run build
+```
 
-### `npm run build`
+Run tests:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm test
+```
 
-The build is minified and the filenames include the hashes.
+## Routing
 
-## GitHub Pages
+The site uses `HashRouter`, so nested routes work on GitHub Pages without custom server rewrites.
+
+Main routes:
+
+- `#/`
+- `#/project`
+- `#/project/:id`
+- `#/about`
+
+## Deployment
 
 A GitHub Actions workflow is included at [`.github/workflows/deploy-pages.yml`](/Users/blueberryncherry/Proj/personal_site_pixel/.github/workflows/deploy-pages.yml).
 
-To enable deployment:
+To deploy with GitHub Pages:
 
-1. Push this repository to GitHub.
-2. In GitHub, open `Settings` -> `Pages`.
-3. Set `Source` to `GitHub Actions`.
-4. Push to the `main` branch, or run the workflow manually from the `Actions` tab.
-
-The site uses hash-based routing, so GitHub Pages can serve nested views without custom server rewrites.
+1. Push the repository to GitHub.
+2. Open `Settings -> Pages`.
+3. Set the source to `GitHub Actions`.
+4. Push to `main`, or run the workflow manually from the `Actions` tab.
 
 ## Notes
 
-This repository is standardized on `npm`. Use `npm install` locally so `package-lock.json` stays in sync with GitHub Actions.
+- This repo is standardized on `npm`.
+- `homepage` is set to `"."` in [`package.json`](/Users/blueberryncherry/Proj/personal_site_pixel/package.json) for relative asset paths.
+- Theme and language preferences are persisted in `localStorage`.
