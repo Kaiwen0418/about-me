@@ -1,6 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LOCALES, resolveLocale, setDocumentLanguage } from "./i18n";
 import { profile } from "./content/profile";
+
+const CASSETTE_MODEL_WIDTH = 720;
+const REEL_SLOWDOWN_MS = 280;
+const CASSETTE_EJECT_MS = 360;
+const CASSETTE_INSERT_MS = 400;
+const CASSETTE_SETTLE_MS = 80;
 
 function Screw({ className = "" }) {
   return <div className={`screw ${className}`} />;
@@ -131,6 +137,7 @@ export default function App() {
   const [incomingEntry, setIncomingEntry] = useState(null);
   const [showPlayPopup, setShowPlayPopup] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const cassetteStackRef = useRef(null);
 
   useEffect(() => {
     setDocumentLanguage(locale);
@@ -138,6 +145,27 @@ export default function App() {
     url.searchParams.set("lang", locale);
     window.history.replaceState({}, "", url);
   }, [locale]);
+
+  useEffect(() => {
+    const stack = cassetteStackRef.current;
+    if (!stack) return undefined;
+
+    const updateScale = () => {
+      const availableWidth = stack.clientWidth || CASSETTE_MODEL_WIDTH;
+      const scale = Math.min(1, availableWidth / CASSETTE_MODEL_WIDTH);
+      stack.style.setProperty("--cassette-scale", scale.toFixed(4));
+    };
+
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(stack);
+    window.addEventListener("resize", updateScale);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateScale);
+    };
+  }, []);
 
   const hero = profile.hero[locale];
   const sections = profile.sections[locale];
@@ -307,21 +335,31 @@ export default function App() {
 
     setShowPlayPopup(false);
     setIncomingEntry(selectedEntry);
-    setCassettePhase("ejecting");
+    setCassettePhase("settling");
+
+    const ejectTimer = window.setTimeout(() => {
+      setCassettePhase("ejecting");
+    }, REEL_SLOWDOWN_MS);
 
     const swapTimer = window.setTimeout(() => {
       setDisplayedEntry(selectedEntry);
       setCassettePhase("inserting");
-    }, 360);
+    }, REEL_SLOWDOWN_MS + CASSETTE_EJECT_MS);
 
     const doneTimer = window.setTimeout(() => {
+      setCassettePhase("settled");
+    }, REEL_SLOWDOWN_MS + CASSETTE_EJECT_MS + CASSETTE_INSERT_MS);
+
+    const cleanupTimer = window.setTimeout(() => {
       setIncomingEntry(null);
       setCassettePhase("idle");
-    }, 760);
+    }, REEL_SLOWDOWN_MS + CASSETTE_EJECT_MS + CASSETTE_INSERT_MS + CASSETTE_SETTLE_MS);
 
     return () => {
+      window.clearTimeout(ejectTimer);
       window.clearTimeout(swapTimer);
       window.clearTimeout(doneTimer);
+      window.clearTimeout(cleanupTimer);
     };
   }, [selectedEntry]);
 
@@ -365,11 +403,11 @@ export default function App() {
               <section className="cassette-stage">
                 <div className={`cassette-shell ${cassettePhase}`}>
                   <div className="cassette-glow" style={{ "--accent": (incomingPlaylistItem || displayedPlaylistItem).accent }} />
-                  <div className="cassette-stack">
+                  <div className="cassette-stack" ref={cassetteStackRef}>
                     <Cassette
                       tapeDetails={tapeDetails}
                       accent={displayedPlaylistItem.accent}
-                      spinning={isPlaying || cassettePhase === "ejecting"}
+                      spinning={isPlaying && cassettePhase === "idle"}
                       dictionary={dictionary}
                       className={`cassette-current ${cassettePhase === "ejecting" ? "is-ejecting" : ""}`}
                     />
@@ -377,7 +415,7 @@ export default function App() {
                       <Cassette
                         tapeDetails={incomingPlaylistItem.tape}
                         accent={incomingPlaylistItem.accent}
-                        spinning={isPlaying || cassettePhase === "inserting"}
+                        spinning={false}
                         dictionary={dictionary}
                         className={`cassette-incoming ${cassettePhase === "inserting" ? "is-inserting" : ""}`}
                       />
@@ -514,7 +552,7 @@ export default function App() {
                 style={{ "--accent": item.accent }}
                 onClick={() => changeEntry(index)}
               >
-                <span className="playlist-number" style={{ color: item.accent }}>
+                <span className="playlist-number">
                   {item.number}
                 </span>
                 <div className="playlist-copy">

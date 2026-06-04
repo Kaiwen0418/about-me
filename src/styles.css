@@ -242,7 +242,14 @@ button {
 }
 
 .cassette-stack {
+  --cassette-model-width: 720px;
+  --cassette-model-height: 456px;
+  --cassette-scale: 1;
   position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: calc(var(--cassette-model-height) * var(--cassette-scale));
 }
 
 .cassette-glow {
@@ -256,48 +263,52 @@ button {
 }
 
 .cassette-body {
-  --label-inset-x: clamp(0.6rem, 4.9cqw, 2rem);
-  --label-inset-y: clamp(0.5rem, 2.45cqw, 1rem);
-  --label-pad: clamp(0.55rem, 3.65cqw, 1.5rem);
-  --head-gap: clamp(0.32rem, 1.6cqw, 0.65rem);
-  --title-size: clamp(0.92rem, 5.15cqw, 3.6rem);
-  --side-size: clamp(1.05rem, 5.95cqw, 3rem);
-  --tape-width: 72cqw;
-  --tape-height: 15.5cqw;
-  --tape-pad-x: 4.05cqw;
-  --reel-size: 11.4cqw;
-  --reel-border: max(2px, 0.52cqw);
-  --reel-ring-inset: 0.58cqw;
-  --reel-ring-border: max(2px, 0.52cqw);
-  --reel-heavy-border: 1.48cqw;
-  --reel-line-size: max(1px, 0.26cqw);
-  --reel-core-size: 3.65cqw;
-  --tape-center-gap: 1.9cqw;
-  --tape-center-pad-y: 1.05cqw;
-  --tape-center-pad-x: 1.65cqw;
-  --tape-center-radius: 2.15cqw;
-  --tape-label-size: clamp(0.42rem, 0.98cqw, 0.68rem);
-  --tape-value-size: clamp(0.55rem, 1.35cqw, 0.9rem);
-  --foot-size: clamp(0.58rem, 1.72cqw, 1.15rem);
-  --bottom-height: 5.2cqw;
-  --bottom-radius: 1.85cqw;
-  --bottom-hole: 1.55cqw;
-  --bottom-square: 2.05cqw;
+  --label-inset-x: 36px;
+  --label-inset-y: 19px;
+  --label-pad: 26px;
+  --head-gap: 12px;
+  --title-size: 38px;
+  --side-size: 43px;
+  --tape-width: 516px;
+  --tape-height: 111px;
+  --tape-pad-x: 29px;
+  --reel-size: 107px;
+  --reel-border: 4px;
+  --reel-ring-inset: 4px;
+  --reel-ring-border: 4px;
+  --reel-heavy-border: 11px;
+  --reel-line-size: 2px;
+  --reel-core-size: 26px;
+  --tape-center-gap: 14px;
+  --tape-center-pad-y: 8px;
+  --tape-center-pad-x: 12px;
+  --tape-center-radius: 15px;
+  --tape-label-size: 7px;
+  --tape-value-size: 10px;
+  --foot-size: 12px;
+  --bottom-height: 37px;
+  --bottom-radius: 13px;
+  --bottom-hole: 11px;
+  --bottom-square: 15px;
   --accent: #ffb000;
-  container-type: inline-size;
   position: relative;
+  flex: 0 0 var(--cassette-model-width);
   overflow: hidden;
-  aspect-ratio: 1.58;
+  width: var(--cassette-model-width);
+  height: var(--cassette-model-height);
   border-radius: 20px;
   background: linear-gradient(145deg, #222222, #111111);
   border: 1px solid #2a2a2a;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 2px 3px rgba(255, 255, 255, 0.05);
+  transform: scale(var(--cassette-scale));
+  transform-origin: top center;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.6s ease, opacity 0.36s ease;
 }
 
 .cassette-current,
 .cassette-incoming {
-  width: 100%;
+  width: var(--cassette-model-width);
+  height: var(--cassette-model-height);
 }
 
 .cassette-current {
@@ -307,9 +318,11 @@ button {
 
 .cassette-incoming {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 50%;
+  margin-left: calc(var(--cassette-model-width) / -2);
   z-index: 1;
-  transform: translateX(-118%) rotateY(10deg) rotate(-2deg) scale(0.98);
+  transform: translateX(-118%) rotateY(10deg) rotate(-2deg) scale(var(--cassette-scale));
   opacity: 0;
   pointer-events: none;
 }
@@ -321,6 +334,17 @@ button {
 
 .cassette-shell.inserting .cassette-current {
   opacity: 0;
+  transition: none;
+}
+
+.cassette-shell.settled .cassette-current {
+  opacity: 1;
+  transition: none;
+}
+
+.cassette-shell.settled .cassette-incoming {
+  opacity: 0;
+  transition: none;
 }
 
 .cassette-shell.inserting .cassette-incoming {
@@ -334,15 +358,18 @@ button {
 }
 
 .cassette-label {
+  --cassette-line-color: color-mix(in srgb, var(--accent) 32%, #b7b7b7);
   position: absolute;
   inset: var(--label-inset-y) var(--label-inset-x);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: var(--label-pad);
-  border-radius: clamp(10px, 2.4cqw, 16px);
+  border-radius: 16px;
   background: #e5e5e5;
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 27px, #c0c0c0 28px);
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent 42%),
+    repeating-linear-gradient(0deg, transparent, transparent 27px, color-mix(in srgb, var(--cassette-line-color) 62%, transparent) 28px);
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
@@ -352,7 +379,7 @@ button {
   gap: 1rem;
   padding-bottom: var(--head-gap);
   margin-bottom: var(--head-gap);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 2px solid color-mix(in srgb, var(--cassette-line-color) 55%, rgba(0, 0, 0, 0.08));
 }
 
 .cassette-head h1,
@@ -399,9 +426,9 @@ button {
   gap: 0;
   border-radius: 999px;
   background: #080808;
-  border: max(2px, 0.42cqw) solid #151515;
+  border: 3px solid #151515;
   box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: translateY(calc(-1 * 1.05cqw));
+  transform: translateY(-8px);
 }
 
 .tape-window > .reel:first-child {
@@ -434,9 +461,13 @@ button {
   animation: spin 6s linear infinite;
 }
 
-.cassette-shell.ejecting .reel.spinning,
-.cassette-shell.inserting .reel.spinning {
-  animation-duration: 1.4s;
+.cassette-shell.settling .cassette-current .reel {
+  animation: reelBrake 280ms cubic-bezier(0.12, 0.72, 0.18, 1) forwards;
+}
+
+.cassette-shell.ejecting .reel,
+.cassette-shell.inserting .reel {
+  animation: none;
 }
 
 .reel-ring,
@@ -496,7 +527,7 @@ button {
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: #050505;
-  border: max(1px, 0.26cqw) solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .tape-center {
@@ -575,26 +606,28 @@ button {
   height: var(--bottom-height);
   border-top-left-radius: var(--bottom-radius);
   border-top-right-radius: var(--bottom-radius);
-  border: max(1px, 0.26cqw) solid rgba(255, 255, 255, 0.1);
+  border: 2px solid #3c3c3c;
   border-bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, #626262 0%, #3f3f3f 42%, #202020 100%);
   display: flex;
   justify-content: space-around;
   align-items: center;
+  box-shadow: inset 0 1px 0 #8a8a8a, inset 0 -10px 18px #161616;
 }
 
 .cassette-bottom span {
   width: var(--bottom-hole);
   height: var(--bottom-hole);
   border-radius: 999px;
-  background: #050505;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #020202;
+  border: 1px solid #4a4a4a;
+  box-shadow: inset 0 1px 2px #000, 0 1px 0 #747474;
 }
 
 .cassette-bottom .square {
   width: var(--bottom-square);
   height: var(--bottom-square);
-  border-radius: max(3px, 0.52cqw);
+  border-radius: 4px;
 }
 
 .screw {
@@ -902,6 +935,7 @@ button {
 }
 
 .playlist-item {
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
@@ -914,14 +948,47 @@ button {
   color: inherit;
   text-align: left;
   cursor: pointer;
+  isolation: isolate;
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .playlist-item.active {
-  background: rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.86),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 6px 0 14px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(0, 0, 0, 0.72),
+    0 0 18px rgba(255, 255, 255, 0.08);
+  transform: translateY(1px);
+}
+
+.playlist-item.active::before {
+  content: "";
+  position: absolute;
+  inset: 7px 8px;
+  z-index: -1;
+  border-radius: 10px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 35%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 7px);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.05),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.26);
+  pointer-events: none;
+}
+
+.playlist-item:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 10px rgba(0, 0, 0, 0.72),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.24);
 }
 
 .playlist-item.active .playlist-copy strong {
-  color: var(--accent, white);
+  color: #f5f5f5;
 }
 
 .playlist-item:first-child .playlist-copy strong {
@@ -936,6 +1003,11 @@ button {
   width: 32px;
   font-family: "Space Mono", monospace;
   font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.playlist-item.active .playlist-number {
+  color: #f5f5f5;
 }
 
 .playlist-copy {
@@ -1131,6 +1203,18 @@ button {
   to { transform: rotate(360deg); }
 }
 
+@keyframes reelBrake {
+  0% {
+    transform: rotate(0deg);
+  }
+  55% {
+    transform: rotate(42deg);
+  }
+  100% {
+    transform: rotate(52deg);
+  }
+}
+
 @keyframes ledBlink {
   0%, 100% {
     opacity: 1;
@@ -1144,29 +1228,29 @@ button {
 
 @keyframes cassetteEjectRight {
   0% {
-    transform: translateY(0) rotateX(0deg) scale(1);
+    transform: translateY(0) rotateX(0deg) scale(var(--cassette-scale));
     opacity: 1;
   }
   22% {
-    transform: translateX(16px) translateY(-6px) rotateY(-8deg) rotate(1deg) scale(0.992);
+    transform: translateX(16px) translateY(-6px) rotateY(-8deg) rotate(1deg) scale(var(--cassette-scale));
   }
   100% {
-    transform: translateX(122%) translateY(-2px) rotateY(-14deg) rotate(3deg) scale(0.98);
+    transform: translateX(122%) translateY(-2px) rotateY(-14deg) rotate(3deg) scale(var(--cassette-scale));
     opacity: 0;
   }
 }
 
 @keyframes cassetteInsertLeft {
   0% {
-    transform: translateX(-118%) translateY(0) rotateY(10deg) rotate(-2deg) scale(0.98);
+    transform: translateX(-118%) translateY(0) rotateY(10deg) rotate(-2deg) scale(var(--cassette-scale));
     opacity: 0;
   }
   60% {
-    transform: translateX(14px) translateY(-4px) rotateY(-4deg) rotate(0.6deg) scale(1.006);
+    transform: translateX(14px) translateY(-4px) rotateY(-4deg) rotate(0.6deg) scale(var(--cassette-scale));
     opacity: 1;
   }
   100% {
-    transform: translateY(0) rotateX(0deg) scale(1);
+    transform: translateY(0) rotateX(0deg) scale(var(--cassette-scale));
     opacity: 1;
   }
 }
@@ -1312,8 +1396,6 @@ button {
     pointer-events: auto;
   }
 
-  .cassette-head,
-  .cassette-foot,
   .footer {
     flex-direction: column;
     align-items: stretch;
@@ -1346,56 +1428,8 @@ button {
     overflow: hidden;
   }
 
-  .tape-center {
-    flex: 0 1 auto;
-  }
-
-  .tape-center span {
-    letter-spacing: 0.14em;
-  }
-
-  .cassette-side {
-    display: flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  .cassette-side strong {
-    font-size: var(--side-size);
-  }
-
-  .cassette-foot p {
-    max-width: none;
-    line-height: 1.1;
-  }
-
-  .cassette-spec {
-    align-items: flex-start;
-    gap: 0.2rem;
-  }
-
-  .cassette-spec span {
-    font-size: 0.5rem;
-    letter-spacing: 0.14em;
-  }
-
-  .cassette-spec strong {
-    max-width: none;
-    text-align: left;
-    font-size: 0.56rem;
-    padding: 0.25rem 0.35rem;
-  }
-
-  .cassette-body {
-    width: 100%;
-    aspect-ratio: 1.58;
-    min-height: 0;
-  }
-
   .cassette-incoming {
-    transform: translateX(-108%) rotateY(8deg) rotate(-2deg) scale(0.98);
+    transform: translateX(-108%) rotateY(8deg) rotate(-2deg) scale(var(--cassette-scale));
   }
 
   .tag-grid,
@@ -1467,22 +1501,6 @@ button {
 
   .cassette-stage {
     padding: 0.55rem;
-  }
-
-  .tape-center span {
-    letter-spacing: 0.12em;
-  }
-
-  .cassette-foot p {
-    line-height: 1.15;
-  }
-
-  .cassette-spec span {
-    font-size: 0.44rem;
-  }
-
-  .cassette-spec strong {
-    font-size: 0.5rem;
   }
 
   .skill-grid {
