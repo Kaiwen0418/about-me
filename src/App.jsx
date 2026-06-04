@@ -33,14 +33,104 @@ function SkillCard({ letter, title, subtitle, accent, active = false }) {
   );
 }
 
+function buildStackCards(item, locale) {
+  if (item.type === "profile") {
+    return [
+      { letter: "T", title: "TYPESCRIPT", subtitle: locale === "en" ? "Type-Safe Systems" : "类型安全系统", accent: "#60a5fa", active: true },
+      { letter: "F", title: "FASTAPI", subtitle: locale === "en" ? "Backend Services" : "后端服务", accent: "#34d399" },
+      { letter: "R", title: "REACT", subtitle: locale === "en" ? "Frontend Interface" : "前端界面", accent: "#fb7185" },
+      { letter: "D", title: "POSTGRES", subtitle: locale === "en" ? "Data Layer" : "数据层", accent: "#c084fc" },
+    ];
+  }
+
+  const subtitles =
+    locale === "en"
+      ? ["Primary Runtime", "Framework Layer", "Interface / Infra", "Support Layer"]
+      : ["核心运行时", "框架层", "界面 / 基建", "辅助层"];
+
+  return item.subtitle
+    .split(",")
+    .map((part) => part.trim())
+    .slice(0, 4)
+    .map((part, index) => ({
+      letter: part.replace(/[^A-Z.]/g, "").charAt(0) || part.charAt(0) || "S",
+      title: part,
+      subtitle: subtitles[index] || subtitles[subtitles.length - 1],
+      accent: ["#60a5fa", "#34d399", "#fb7185", "#c084fc"][index] || "#ffb000",
+      active: index === 0,
+    }));
+}
+
+function Cassette({ tapeDetails, accent, spinning, dictionary, className = "" }) {
+  return (
+    <div className={`cassette-body ${className}`} style={{ "--accent": accent }}>
+      <Screw className="top-left" />
+      <Screw className="top-right" />
+      <Screw className="mid-left" />
+      <Screw className="mid-right" />
+      <Screw className="bottom-left" />
+      <Screw className="bottom-right" />
+
+      <div className="cassette-label">
+        <div className="cassette-head">
+          <div>
+            <h1>{tapeDetails.title}</h1>
+          </div>
+          <div className="cassette-side">
+            <span>{dictionary.cassetteSide}</span>
+            <strong>{tapeDetails.side}</strong>
+          </div>
+        </div>
+
+        <div className="tape-window">
+          <Reel spinning={spinning} heavy />
+          <div className="tape-center">
+            <div>
+              <span>LOG</span>
+              <strong>{tapeDetails.log}</strong>
+            </div>
+            <div>
+              <span>FLD</span>
+              <strong>{tapeDetails.field}</strong>
+            </div>
+            <div>
+              <span>SCN</span>
+              <strong>{tapeDetails.scene}</strong>
+            </div>
+          </div>
+          <Reel spinning={spinning} />
+        </div>
+
+        <div className="cassette-foot">
+          <p>{tapeDetails.note}</p>
+          <div className="cassette-spec">
+            <span>{tapeDetails.meta}</span>
+            <strong>{tapeDetails.spec}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div className="cassette-bottom">
+        <span />
+        <span className="square" />
+        <span />
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [locale, setLocale] = useState(resolveLocale);
   const [isPlaying, setIsPlaying] = useState(true);
   const [activeView, setActiveView] = useState("feed");
-  const [selectedProject, setSelectedProject] = useState(0);
+  const [selectedEntry, setSelectedEntry] = useState(0);
   const [search, setSearch] = useState("");
   const [availabilityLed, setAvailabilityLed] = useState(true);
   const [cassettePhase, setCassettePhase] = useState("idle");
+  const [displayedEntry, setDisplayedEntry] = useState(0);
+  const [incomingEntry, setIncomingEntry] = useState(null);
+  const [showPlayPopup, setShowPlayPopup] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     setDocumentLanguage(locale);
@@ -63,7 +153,7 @@ export default function App() {
         find: "Find",
         logs: "Logs",
         me: "Me",
-        playlist: "Project Playlist",
+        playlist: "Playlist",
         mount: "Mount New Reel",
         cassetteLabel: "Session Title / Date",
         cassetteSide: "Side",
@@ -85,6 +175,10 @@ export default function App() {
         degree: "Degree",
         location: "Location",
         selected: "Selected",
+        profile: "Profile",
+        openGithub: "Open GitHub",
+        currentLink: "Current Link",
+        list: "List",
       },
       "zh-CN": {
         exp: "经验: 2+ 年",
@@ -96,7 +190,7 @@ export default function App() {
         find: "检索",
         logs: "日志",
         me: "关于",
-        playlist: "项目播放列表",
+        playlist: "播放列表",
         mount: "装载新磁带",
         cassetteLabel: "主题 / 时间",
         cassetteSide: "面",
@@ -118,21 +212,84 @@ export default function App() {
         degree: "学位",
         location: "地点",
         selected: "当前",
+        profile: "个人",
+        openGithub: "打开 GitHub",
+        currentLink: "当前链接",
+        list: "列表",
       },
     }),
     [],
   )[locale];
 
-  const playlist = profile.projects.map((project, index) => ({
-    number: String(index + 1).padStart(2, "0"),
-    title: project.name.toUpperCase(),
-    subtitle: project.stack.toUpperCase(),
-    time: ["14:22", "08:45", "11:15"][index] || "06:30",
-    accent: ["#34d399", "#fb7185", "#fbbf24"][index] || "#60a5fa",
-  }));
+  const playlist = useMemo(
+    () => [
+      {
+        type: "profile",
+        number: "00",
+        title: profile.name.toUpperCase(),
+        subtitle: hero.eyebrow.toUpperCase(),
+        time: "00:01",
+        accent: "#ffb000",
+        url: profile.github,
+        detailsTitle: profile.name,
+        detailsSummary: hero.summary,
+        bullets: [
+          profile.location,
+          profile.email,
+          "github.com/Kaiwen0418",
+        ],
+        tape: {
+          title: "Kaiwen Liu / Profile",
+          side: "P",
+          log: "00",
+          field: "ME",
+          scene: "01",
+          note: locale === "en" ? "software engineer.\nbackend · ai · systems." : "软件工程师。\n后端 · AI · 系统。",
+          spec: "PERSONAL GITHUB",
+          meta: "00:01",
+        },
+      },
+      ...profile.projects.map((project, index) => ({
+        type: "project",
+        number: String(index + 1).padStart(2, "0"),
+        title: project.name.toUpperCase(),
+        subtitle: project.stack.toUpperCase(),
+        time: ["14:22", "08:45", "11:15"][index] || "06:30",
+        accent: ["#34d399", "#fb7185", "#fbbf24"][index] || "#60a5fa",
+        url: project.github || profile.github,
+        detailsTitle: project.name,
+        detailsSummary: project.summary[locale],
+        bullets: project.bullets[locale],
+        tape: {
+          title: project.name.length > 28 ? `${project.name.slice(0, 28)}...` : project.name,
+          side: String.fromCharCode(65 + index),
+          log: String(index + 1).padStart(2, "0"),
+          field: project.stack.split(",")[0].replace(".js", "").replace(".JS", "").slice(0, 8).toUpperCase(),
+          scene: String(project.stack.split(",").length).padStart(2, "0"),
+          note:
+            locale === "en"
+              ? [
+                  "real-time agent evals.",
+                  "prediction market signals.",
+                  "circuit sim, rebuilt lean.",
+                ][index] || project.summary[locale]
+              : [
+                  "实时 agent 评测。",
+                  "预测市场信号面板。",
+                  "轻量重构电路模拟器。",
+                ][index] || project.summary[locale],
+          spec: project.stack.toUpperCase(),
+          meta: ["14:22", "08:45", "11:15"][index] || "06:30",
+        },
+      })),
+    ],
+    [hero.eyebrow, hero.summary, locale],
+  );
 
-  const selected = profile.projects[selectedProject];
-  const selectedPlaylistItem = playlist[selectedProject];
+  const selectedPlaylistItem = playlist[selectedEntry];
+  const displayedPlaylistItem = playlist[displayedEntry];
+  const incomingPlaylistItem = incomingEntry === null ? null : playlist[incomingEntry];
+  const stackCards = useMemo(() => buildStackCards(selectedPlaylistItem, locale), [locale, selectedPlaylistItem]);
   const filteredSkills = [...profile.skills.languages, ...profile.skills.technologies].filter((item) =>
     item.toLowerCase().includes(search.toLowerCase()),
   );
@@ -141,31 +298,39 @@ export default function App() {
     profile.experience[1],
     profile.experience[2],
   ];
-  const tapeDetails = useMemo(
-    () => ({
-      title: selected.name.length > 28 ? `${selected.name.slice(0, 28)}...` : selected.name,
-      side: String.fromCharCode(65 + selectedProject),
-      log: selectedPlaylistItem.number,
-      field: selected.stack.split(",")[0].replace(".js", "").replace(".JS", "").slice(0, 8).toUpperCase(),
-      scene: selected.stack.split(",").length,
-      note: selected.summary[locale],
-      spec: selected.stack.toUpperCase(),
-      meta: selectedPlaylistItem.time,
-    }),
-    [locale, selected, selectedPlaylistItem, selectedProject],
-  );
+  const tapeDetails = displayedPlaylistItem.tape;
 
   useEffect(() => {
-    setCassettePhase("switching");
-    const timer = window.setTimeout(() => {
+    if (selectedEntry === displayedEntry) {
+      return undefined;
+    }
+
+    setShowPlayPopup(false);
+    setIncomingEntry(selectedEntry);
+    setCassettePhase("ejecting");
+
+    const swapTimer = window.setTimeout(() => {
+      setDisplayedEntry(selectedEntry);
+      setCassettePhase("inserting");
+    }, 360);
+
+    const doneTimer = window.setTimeout(() => {
+      setIncomingEntry(null);
       setCassettePhase("idle");
-    }, 720);
+    }, 760);
 
-    return () => window.clearTimeout(timer);
-  }, [selectedProject]);
+    return () => {
+      window.clearTimeout(swapTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [selectedEntry]);
 
-  const changeProject = (nextIndex) => {
-    setSelectedProject((current) => {
+  const changeEntry = (nextIndex) => {
+    if (cassettePhase !== "idle" || nextIndex < 0 || nextIndex >= playlist.length) {
+      return;
+    }
+    setMobileSidebarOpen(false);
+    setSelectedEntry((current) => {
       if (nextIndex === current) {
         return current;
       }
@@ -181,9 +346,7 @@ export default function App() {
             <div className="view feed-view">
               <header className="status-bar">
                 <div className="status-meta">
-                  <span>{dictionary.exp}</span>
-                  <span>{dictionary.stack}</span>
-                  <span>{dictionary.avail}</span>
+                  <span className="meta-primary">{dictionary.exp}</span>
                 </div>
 
                 <div className="availability-box">
@@ -196,99 +359,36 @@ export default function App() {
                 </div>
 
                 <div className="status-actions">
-                  <div className="locale-switch" aria-label={sections.locale}>
-                    {LOCALES.map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        className={item === locale ? "active" : ""}
-                        onClick={() => setLocale(item)}
-                      >
-                        {item === "en" ? "EN" : "中文"}
-                      </button>
-                    ))}
-                  </div>
-                  <button type="button" className="icon-button" onClick={() => setAvailabilityLed((v) => !v)}>
-                    x
-                  </button>
                 </div>
               </header>
 
               <section className="cassette-stage">
                 <div className={`cassette-shell ${cassettePhase}`}>
-                  <div className="cassette-glow" style={{ "--accent": selectedPlaylistItem.accent }} />
-                  <div className="cassette-body" style={{ "--accent": selectedPlaylistItem.accent }}>
-                  <Screw className="top-left" />
-                  <Screw className="top-right" />
-                  <Screw className="mid-left" />
-                  <Screw className="mid-right" />
-                  <Screw className="bottom-left" />
-                  <Screw className="bottom-right" />
-
-                  <div className="cassette-label">
-                    <div className="cassette-head">
-                      <div>
-                        <span>{dictionary.cassetteLabel}</span>
-                        <h1>{tapeDetails.title}</h1>
-                      </div>
-                      <div className="cassette-side">
-                        <span>{dictionary.cassetteSide}</span>
-                        <strong>{tapeDetails.side}</strong>
-                      </div>
-                    </div>
-
-                    <div className="tape-window">
-                      <Reel spinning={isPlaying || cassettePhase === "switching"} heavy />
-                      <div className="tape-center">
-                        <div>
-                          <span>LOG</span>
-                          <strong>{tapeDetails.log}</strong>
-                        </div>
-                        <div>
-                          <span>FLD</span>
-                          <strong>{tapeDetails.field}</strong>
-                        </div>
-                        <div>
-                          <span>SCN</span>
-                          <strong>{String(tapeDetails.scene).padStart(2, "0")}</strong>
-                        </div>
-                      </div>
-                      <Reel spinning={isPlaying || cassettePhase === "switching"} />
-                    </div>
-
-                    <div className="cassette-foot">
-                      <p>{tapeDetails.note}</p>
-                      <div className="cassette-spec">
-                        <span>{tapeDetails.meta}</span>
-                        <strong>{tapeDetails.spec}</strong>
-                      </div>
-                    </div>
+                  <div className="cassette-glow" style={{ "--accent": (incomingPlaylistItem || displayedPlaylistItem).accent }} />
+                  <div className="cassette-stack">
+                    <Cassette
+                      tapeDetails={tapeDetails}
+                      accent={displayedPlaylistItem.accent}
+                      spinning={isPlaying || cassettePhase === "ejecting"}
+                      dictionary={dictionary}
+                      className={`cassette-current ${cassettePhase === "ejecting" ? "is-ejecting" : ""}`}
+                    />
+                    {incomingPlaylistItem && (
+                      <Cassette
+                        tapeDetails={incomingPlaylistItem.tape}
+                        accent={incomingPlaylistItem.accent}
+                        spinning={isPlaying || cassettePhase === "inserting"}
+                        dictionary={dictionary}
+                        className={`cassette-incoming ${cassettePhase === "inserting" ? "is-inserting" : ""}`}
+                      />
+                    )}
                   </div>
-
-                  <div className="cassette-bottom">
-                    <span />
-                    <span className="square" />
-                    <span />
-                  </div>
-                </div>
-                </div>
-              </section>
-
-              <section className="hero-text">
-                <p className="hero-eyebrow">{hero.eyebrow}</p>
-                <h2>{hero.title}</h2>
-                <p className="hero-summary">{hero.summary}</p>
-                <div className="hero-cta">
-                  <a href={`mailto:${profile.email}`}>{sections.sendEmail}</a>
-                  <a href={profile.github} target="_blank" rel="noreferrer">
-                    {sections.viewGithub}
-                  </a>
                 </div>
               </section>
 
               <section className="skills-rack">
                 <div className="section-line">
-                  <h3>{dictionary.coreStack}</h3>
+                  <h3>{selectedPlaylistItem.type === "profile" ? dictionary.coreStack : selectedPlaylistItem.subtitle}</h3>
                   <div className="line" />
                   <div className="meters">
                     <span />
@@ -298,10 +398,16 @@ export default function App() {
                 </div>
 
                 <div className="skill-grid">
-                  <SkillCard letter="T" title="TYPESCRIPT" subtitle="Type-Safe Systems" accent="#60a5fa" active />
-                  <SkillCard letter="F" title="FASTAPI / NODE" subtitle="Backend Services" accent="#34d399" />
-                  <SkillCard letter="R" title="REACT / NEXT.JS" subtitle="Frontend Architecture" accent="#fb7185" />
-                  <SkillCard letter="D" title="POSTGRES / REDIS" subtitle="Data Layer & Queueing" accent="#c084fc" />
+                  {stackCards.map((card) => (
+                    <SkillCard
+                      key={`${selectedPlaylistItem.number}-${card.title}`}
+                      letter={card.letter}
+                      title={card.title}
+                      subtitle={card.subtitle}
+                      accent={card.accent}
+                      active={card.active}
+                    />
+                  ))}
                 </div>
               </section>
             </div>
@@ -394,7 +500,7 @@ export default function App() {
           )}
         </main>
 
-        <aside className="sidebar">
+        <aside className={`sidebar ${mobileSidebarOpen ? "mobile-open" : ""}`}>
           <div className="sidebar-head">
             <h3>{dictionary.playlist}</h3>
             <div className="line" />
@@ -404,9 +510,9 @@ export default function App() {
               <button
                 key={item.number}
                 type="button"
-                className={`playlist-item ${selectedProject === index ? "active" : ""}`}
+                className={`playlist-item ${selectedEntry === index ? "active" : ""} ${cassettePhase !== "idle" ? "is-locked" : ""}`}
                 style={{ "--accent": item.accent }}
-                onClick={() => changeProject(index)}
+                onClick={() => changeEntry(index)}
               >
                 <span className="playlist-number" style={{ color: item.accent }}>
                   {item.number}
@@ -422,49 +528,94 @@ export default function App() {
 
           <article className="selected-project" style={{ "--accent": selectedPlaylistItem.accent }}>
             <span className="selected-label">{dictionary.selected}</span>
-            <h3>{selected.name}</h3>
-            <p>{selected.summary[locale]}</p>
+            <h3>{selectedPlaylistItem.detailsTitle}</h3>
+            <p>{selectedPlaylistItem.detailsSummary}</p>
             <ul>
-              {selected.bullets[locale].map((bullet) => (
+              {selectedPlaylistItem.bullets.map((bullet) => (
                 <li key={bullet}>{bullet}</li>
               ))}
             </ul>
           </article>
         </aside>
       </div>
+      <button
+        type="button"
+        className={`sidebar-backdrop ${mobileSidebarOpen ? "visible" : ""}`}
+        aria-label="Close playlist"
+        onClick={() => setMobileSidebarOpen(false)}
+      />
 
       <footer className="footer">
-        <div className="footer-nav">
-          {[
-            ["feed", dictionary.feed],
-            ["find", dictionary.find],
-            ["logs", dictionary.logs],
-          ].map(([id, label]) => (
-            <button key={id} type="button" className={activeView === id ? "active" : ""} onClick={() => setActiveView(id)}>
-              {label}
+        <button
+          type="button"
+          className="transport-button sidebar-toggle-button"
+          onClick={() => setMobileSidebarOpen((value) => !value)}
+          aria-label={dictionary.list}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="4" x2="20" y1="7" y2="7" />
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="17" y2="17" />
+          </svg>
+        </button>
+
+        <div className="playback">
+          <button type="button" className="transport-button icon-transport" onClick={() => changeEntry(Math.max(0, selectedEntry - 1))} disabled={cassettePhase !== "idle"}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="19 20 9 12 19 4 19 20" />
+              <line x1="5" x2="5" y1="19" y2="5" />
+            </svg>
+          </button>
+          <div className="play-button-wrap">
+            {showPlayPopup && (
+              <div className="play-popup">
+                <span>{dictionary.currentLink}</span>
+                <strong>{selectedPlaylistItem.detailsTitle}</strong>
+                <a href={selectedPlaylistItem.url} target="_blank" rel="noreferrer" onClick={() => setShowPlayPopup(false)}>
+                  {dictionary.openGithub}
+                </a>
+              </div>
+            )}
+            <button type="button" className="play-button" onClick={() => { setIsPlaying((value) => !value); setShowPlayPopup((value) => !value); }}>
+              <div className="play-button-inner">
+                {isPlaying ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="play-icon">
+                    <rect x="6" y="4" width="4" height="16" />
+                    <rect x="14" y="4" width="4" height="16" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="play-icon play-shift">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                )}
+              </div>
+            </button>
+          </div>
+          <button
+            type="button"
+            className="transport-button icon-transport"
+            onClick={() => changeEntry(Math.min(playlist.length - 1, selectedEntry + 1))}
+            disabled={cassettePhase !== "idle"}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 4 15 12 5 20 5 4" />
+              <line x1="19" x2="19" y1="5" y2="19" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="locale-switch footer-locale-switch" aria-label={sections.locale}>
+          {LOCALES.map((item) => (
+              <button
+              key={item}
+              type="button"
+              className={item === locale ? "active" : ""}
+              onClick={() => setLocale(item)}
+            >
+              {item === "en" ? "EN" : "中"}
             </button>
           ))}
         </div>
-
-        <div className="playback">
-          <button type="button" className="transport-button" onClick={() => changeProject(Math.max(0, selectedProject - 1))}>
-            prev
-          </button>
-          <button type="button" className="play-button" onClick={() => setIsPlaying((value) => !value)}>
-            {isPlaying ? "pause" : "play"}
-          </button>
-          <button
-            type="button"
-            className="transport-button"
-            onClick={() => changeProject(Math.min(profile.projects.length - 1, selectedProject + 1))}
-          >
-            next
-          </button>
-        </div>
-
-        <button type="button" className={`me-button ${activeView === "me" ? "active" : ""}`} onClick={() => setActiveView("me")}>
-          {dictionary.me}
-        </button>
       </footer>
     </div>
   );
