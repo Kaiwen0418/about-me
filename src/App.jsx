@@ -28,12 +28,14 @@ function Reel({ spinning = true, heavy = false }) {
 function SkillCard({ letter, title, subtitle, accent, active = false }) {
   return (
     <article className={`skill-card ${active ? "active" : ""}`}>
-      <div className="skill-glyph" style={{ color: accent }}>
-        {letter}
-      </div>
-      <div>
-        <h4>{title}</h4>
-        <p>{subtitle}</p>
+      <div className="skill-card-inner">
+        <div className="skill-glyph" style={{ color: accent }}>
+          {letter}
+        </div>
+        <div>
+          <h4>{title}</h4>
+          <p>{subtitle}</p>
+        </div>
       </div>
     </article>
   );
