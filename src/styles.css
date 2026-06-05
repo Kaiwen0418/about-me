@@ -89,7 +89,7 @@ button {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-bottom: var(--player-safe-bottom);
+  padding-bottom: 0;
 }
 
 .sidebar-backdrop {
@@ -657,9 +657,12 @@ button {
 .bottom-left { bottom: 16px; left: 16px; transform: rotate(90deg); }
 .bottom-right { bottom: 16px; right: 16px; transform: rotate(-12deg); }
 
-.skills-rack,
-.sidebar-head {
+.skills-rack {
   margin-top: 1.75rem;
+}
+
+.sidebar-head {
+  margin-top: 0;
 }
 
 .section-line,
@@ -712,9 +715,12 @@ button {
 }
 
 .skill-card {
+  aspect-ratio: 1 / 1;
+  min-width: 0;
   padding: 1rem;
   border-radius: 18px;
   background: rgba(16, 16, 16, 0.6);
+  overflow: hidden;
 }
 
 .skill-card.active {
@@ -745,6 +751,13 @@ button {
   color: white;
 }
 
+.skill-card h4 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .selected-project h3 {
   color: var(--accent, white);
 }
@@ -754,6 +767,13 @@ button {
 .log-body p,
 .education-panel p {
   color: rgba(255, 255, 255, 0.46);
+}
+
+.skill-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .search-box {
@@ -927,7 +947,7 @@ button {
 }
 
 .sidebar-head {
-  padding: 0.55rem 1.5rem 0.85rem;
+  padding: 0.55rem 1.5rem 0;
 }
 
 .playlist {
@@ -1275,7 +1295,7 @@ button {
   }
 
   .sidebar-head {
-    padding: 0.5rem 1.2rem 0.75rem;
+    padding: 0.5rem 1.2rem 0;
   }
 
   .playlist-item {
