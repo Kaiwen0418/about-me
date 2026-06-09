@@ -1301,7 +1301,7 @@ button {
   }
 
   .main-panel {
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem calc(1.5rem + var(--player-safe-bottom));
   }
 
   .sidebar-head {
@@ -1333,7 +1333,7 @@ button {
   }
 
   .main-panel {
-    padding: 1.15rem;
+    padding: 1.15rem 1.15rem calc(1.15rem + var(--player-safe-bottom));
   }
 
   .status-bar {
@@ -1375,6 +1375,36 @@ button {
 
   .playlist-copy strong {
     font-size: 0.82rem;
+  }
+
+  .skill-grid {
+    gap: 0.65rem;
+  }
+
+  .skill-card {
+    --skill-content-scale: 0.72;
+    padding: 0.68rem 0.48rem;
+    border-radius: 14px;
+  }
+
+  .skill-glyph {
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 0.42rem;
+    border-radius: 10px;
+    font-size: 1.05rem;
+  }
+
+  .skill-card h4 {
+    font-size: 0.62rem;
+    line-height: 1.08;
+    word-break: break-word;
+  }
+
+  .skill-card p {
+    margin-top: 0.18rem;
+    font-size: 0.5rem;
+    line-height: 1.08;
   }
 }
 
@@ -1473,7 +1503,7 @@ button {
   }
 
   .skill-card {
-    --skill-content-scale: 0.82;
+    --skill-content-scale: 0.64;
     padding: 0.7rem 0.45rem;
     border-radius: 14px;
   }
@@ -1539,7 +1569,7 @@ button {
   }
 
   .skill-card {
-    --skill-content-scale: 0.72;
+    --skill-content-scale: 0.56;
     padding: 0.58rem 0.38rem;
   }
 
