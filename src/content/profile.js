@@ -4,6 +4,7 @@ export const profile = {
   phone: "07864873860",
   location: "London, UK",
   github: "https://github.com/Kaiwen0418",
+  linkedin: "https://www.linkedin.com/in/kaiwen-liu-5237911b9",
   hero: {
     en: {
       eyebrow: "Software Engineer",
