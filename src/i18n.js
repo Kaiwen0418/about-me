@@ -8,11 +8,6 @@ export function resolveLocale() {
     return requested;
   }
 
-  const browserLocale = navigator.language || "en";
-  if (browserLocale.toLowerCase().startsWith("zh")) {
-    return "zh-CN";
-  }
-
   return "en";
 }
 

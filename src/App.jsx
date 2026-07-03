@@ -25,9 +25,21 @@ function Reel({ spinning = true, heavy = false }) {
   );
 }
 
-function SkillCard({ letter, title, subtitle, accent, active = false }) {
+function SkillCard({ letter, title, subtitle, accent, active = false, href = "" }) {
+  const CardElement = href ? "a" : "article";
+
   return (
-    <article className={`skill-card ${active ? "active" : ""}`}>
+    <CardElement
+      className={`skill-card ${active ? "active" : ""} ${href ? "skill-card-link" : ""}`}
+      {...(href
+        ? {
+            href,
+            target: "_blank",
+            rel: "noreferrer",
+            "aria-label": `${title}: ${subtitle}`,
+          }
+        : {})}
+    >
       <div className="skill-card-inner">
         <div className="skill-glyph" style={{ color: accent }}>
           {letter}
@@ -37,7 +49,7 @@ function SkillCard({ letter, title, subtitle, accent, active = false }) {
           <p>{subtitle}</p>
         </div>
       </div>
-    </article>
+    </CardElement>
   );
 }
 
@@ -437,7 +449,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="skill-grid">
+                <div className="skill-grid" style={{ "--skill-count": stackCards.length + 1 }}>
                   {stackCards.map((card) => (
                     <SkillCard
                       key={`${selectedPlaylistItem.number}-${card.title}`}
@@ -448,6 +460,17 @@ export default function App() {
                       active={card.active}
                     />
                   ))}
+                  <SkillCard
+                    letter="GH"
+                    title="GITHUB"
+                    subtitle={
+                      selectedPlaylistItem.type === "profile"
+                        ? locale === "en" ? "Open Profile" : "打开主页"
+                        : locale === "en" ? "Open Repository" : "打开仓库"
+                    }
+                    accent="#f5f5f5"
+                    href={selectedPlaylistItem.url}
+                  />
                 </div>
               </section>
             </div>
