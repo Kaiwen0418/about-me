@@ -8,6 +8,10 @@ const CASSETTE_EJECT_MS = 360;
 const CASSETTE_INSERT_MS = 400;
 const CASSETTE_SETTLE_MS = 80;
 
+function resolveAssetUrl(path) {
+  return path ? `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}` : "";
+}
+
 function Screw({ className = "" }) {
   return <div className={`screw ${className}`} />;
 }
@@ -110,6 +114,7 @@ function Cassette({
   className = "",
   flipped = false,
   imageUrl = "",
+  backTapeDetails = null,
   interactive = false,
   onFlip,
 }) {
@@ -127,7 +132,13 @@ function Cassette({
       style={{ "--accent": accent }}
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
-      aria-label={interactive ? `${tapeDetails.title}: ${flipped ? "show front" : "show project image"}` : undefined}
+      aria-label={
+        interactive
+          ? `${tapeDetails.title}: ${
+              flipped ? dictionary.showFront : backTapeDetails ? dictionary.showIntroduction : dictionary.showProjectImage
+            }`
+          : undefined
+      }
       onClick={interactive ? onFlip : undefined}
       onKeyDown={handleKeyDown}
     >
@@ -186,34 +197,97 @@ function Cassette({
           </div>
         </div>
 
-        <div className="cassette-face cassette-back">
-          <Screw className="top-left" />
-          <Screw className="top-right" />
-          <Screw className="bottom-left" />
-          <Screw className="bottom-right" />
-          <div className="cassette-back-label">
-            <div className="cassette-back-head">
-              <span>{dictionary.projectImage}</span>
-              <strong>{tapeDetails.side} / B</strong>
-            </div>
-            <div
-              className={`cassette-project-image ${imageUrl ? "has-image" : ""}`}
-              style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}
-            >
-              {!imageUrl && (
-                <div className="cassette-image-placeholder">
-                  <span>IMAGE SLOT</span>
-                  <strong>{tapeDetails.title}</strong>
-                  <small>{dictionary.uploadLater}</small>
+        <div className={`cassette-face cassette-back ${backTapeDetails ? "cassette-profile-back" : ""}`}>
+          {backTapeDetails ? (
+            <>
+              <Screw className="top-left" />
+              <Screw className="top-right" />
+              <Screw className="mid-left" />
+              <Screw className="mid-right" />
+              <Screw className="bottom-left" />
+              <Screw className="bottom-right" />
+
+              <div className="cassette-label">
+                <div className="cassette-head">
+                  <div>
+                    <h1>{backTapeDetails.title}</h1>
+                  </div>
+                  <div className="cassette-side">
+                    <span>{dictionary.cassetteSide}</span>
+                    <strong>{backTapeDetails.side}</strong>
+                  </div>
                 </div>
-              )}
-            </div>
-            <div className="cassette-back-foot">
-              <span>{tapeDetails.meta}</span>
-              <strong>{tapeDetails.spec}</strong>
-            </div>
-          </div>
+
+                <div className="tape-window">
+                  <Reel spinning={spinning} heavy />
+                  <div className="tape-center">
+                    <div>
+                      <span>LOG</span>
+                      <strong>{backTapeDetails.log}</strong>
+                    </div>
+                    <div>
+                      <span>FLD</span>
+                      <strong>{backTapeDetails.field}</strong>
+                    </div>
+                    <div>
+                      <span>SCN</span>
+                      <strong>{backTapeDetails.scene}</strong>
+                    </div>
+                  </div>
+                  <Reel spinning={spinning} />
+                </div>
+
+                <div className="cassette-foot cassette-back-intro">
+                  <p>{backTapeDetails.note}</p>
+                  <div className="cassette-spec">
+                    <span>{backTapeDetails.meta}</span>
+                    <strong>{backTapeDetails.spec}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="cassette-bottom">
+                <span />
+                <span className="square" />
+                <span />
+              </div>
+            </>
+          ) : (
+            <>
+              <Screw className="top-left" />
+              <Screw className="top-right" />
+              <Screw className="bottom-left" />
+              <Screw className="bottom-right" />
+              <div className="cassette-back-label">
+                <div className="cassette-back-head">
+                  <span>{dictionary.projectImage}</span>
+                  <strong>{tapeDetails.side} / B</strong>
+                </div>
+                <div
+                  className={`cassette-project-image ${imageUrl ? "has-image" : ""}`}
+                  style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}
+                >
+                  {!imageUrl && (
+                    <div className="cassette-image-placeholder">
+                      <span>IMAGE SLOT</span>
+                      <strong>{tapeDetails.title}</strong>
+                      <small>{dictionary.uploadLater}</small>
+                    </div>
+                  )}
+                </div>
+                <div className="cassette-back-foot">
+                  <span>{tapeDetails.meta}</span>
+                  <strong>{tapeDetails.spec}</strong>
+                </div>
+              </div>
+            </>
+          )}
         </div>
+
+        <div className="cassette-edge cassette-edge-top" aria-hidden="true" />
+        <div className="cassette-edge cassette-edge-right" aria-hidden="true" />
+        <div className="cassette-edge cassette-edge-bottom" aria-hidden="true" />
+        <div className="cassette-edge cassette-edge-left" aria-hidden="true" />
       </div>
     </div>
   );
@@ -304,6 +378,9 @@ export default function App() {
         list: "List",
         projectImage: "Project Image",
         uploadLater: "Upload image later",
+        showFront: "show front",
+        showProjectImage: "show project image",
+        showIntroduction: "show introduction",
       },
       "zh-CN": {
         exp: "经验: 2+ 年",
@@ -343,6 +420,9 @@ export default function App() {
         list: "列表",
         projectImage: "项目图片",
         uploadLater: "稍后上传图片",
+        showFront: "显示正面",
+        showProjectImage: "显示项目图片",
+        showIntroduction: "显示个人介绍",
       },
     }),
     [],
@@ -376,17 +456,30 @@ export default function App() {
           spec: "PERSONAL GITHUB",
           meta: "00:01",
         },
+        backTape: {
+          title: locale === "en" ? "Kaiwen Liu / Introduction" : "Kaiwen Liu / 个人介绍",
+          side: "B",
+          log: "00",
+          field: "MENG",
+          scene: "02",
+          note:
+            locale === "en"
+              ? "MEng graduate from Imperial College London with production experience across blockchain infrastructure, AI tooling, and cross-platform applications."
+              : "帝国理工学院 MEng 毕业生，拥有区块链基础设施、AI 工具和跨平台应用的生产环境经验。",
+          spec: "IMPERIAL COLLEGE LONDON",
+          meta: "PROFILE / 2026",
+        },
       },
       ...profile.projects.map((project, index) => ({
         type: "project",
         number: String(index + 1).padStart(2, "0"),
-        title: project.name.toUpperCase(),
+        title: (project.playlistName || project.name).toUpperCase(),
         subtitle: project.stack.toUpperCase(),
         time: ["14:22", "08:45", "09:30", "11:15"][index] || "06:30",
         accent: ["#34d399", "#fb7185", "#60a5fa", "#fbbf24"][index] || "#60a5fa",
         url: project.github || profile.github,
         liveUrl: project.liveUrl,
-        imageUrl: project.image || "",
+        imageUrl: resolveAssetUrl(project.image),
         detailsTitle: project.name,
         detailsSummary: project.summary[locale],
         bullets: project.bullets[locale],
@@ -555,6 +648,7 @@ export default function App() {
                       className={`cassette-current ${cassettePhase === "ejecting" ? "is-ejecting" : ""}`}
                       flipped={isCassetteFlipped}
                       imageUrl={displayedPlaylistItem.imageUrl}
+                      backTapeDetails={displayedPlaylistItem.backTape}
                       interactive={cassettePhase === "idle"}
                       onFlip={toggleCassetteFlip}
                     />

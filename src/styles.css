@@ -321,6 +321,7 @@ button {
   --bottom-radius: 13px;
   --bottom-hole: 11px;
   --bottom-square: 15px;
+  --cassette-depth: 38px;
   --accent: #ffb000;
   position: relative;
   flex: 0 0 var(--cassette-model-width);
@@ -351,7 +352,7 @@ button {
   height: 100%;
   transform-style: preserve-3d;
   transform: rotateY(0deg);
-  transition: transform 0.9s cubic-bezier(0.2, 0.75, 0.2, 1);
+  transition: transform 1.15s cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 .cassette-flipper.is-flipped {
@@ -379,15 +380,108 @@ button {
 }
 
 .cassette-front {
-  transform: rotateY(0deg) translateZ(1px);
+  transform: translateZ(calc(var(--cassette-depth) / 2));
 }
 
 .cassette-back {
-  transform: rotateY(180deg) translateZ(1px);
+  transform: rotateY(180deg) translateZ(calc(var(--cassette-depth) / 2));
   padding: 34px 42px;
   background:
     radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 42%),
     linear-gradient(145deg, #1f1f1f, #0d0d0d);
+}
+
+.cassette-profile-back {
+  padding: 0;
+  background: linear-gradient(145deg, #222222, #111111);
+}
+
+.cassette-profile-back .cassette-head h1 {
+  font-size: 36px;
+}
+
+.cassette-back-intro {
+  align-items: flex-end;
+}
+
+.cassette-foot.cassette-back-intro p {
+  max-width: 72%;
+  font-size: 11.5px;
+  line-height: 1.15;
+}
+
+.cassette-back-intro .cassette-spec span {
+  font-size: 9px;
+}
+
+.cassette-back-intro .cassette-spec strong {
+  padding: 5px 8px;
+  font-size: 11.5px;
+}
+
+.cassette-edge {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid #343434;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 24px, rgba(255, 255, 255, 0.04) 25px, transparent 26px),
+    linear-gradient(180deg, #282828 0%, #151515 45%, #090909 100%);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.08),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.75);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.cassette-edge::before {
+  content: "";
+  position: absolute;
+  inset: 7px 10%;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, #303030);
+  border-radius: 5px;
+  opacity: 0.75;
+}
+
+.cassette-edge-top,
+.cassette-edge-bottom {
+  left: 0;
+  width: 100%;
+  height: var(--cassette-depth);
+}
+
+.cassette-edge-top {
+  top: calc(var(--cassette-depth) / -2);
+  transform: rotateX(90deg);
+}
+
+.cassette-edge-bottom {
+  bottom: calc(var(--cassette-depth) / -2);
+  transform: rotateX(-90deg);
+}
+
+.cassette-edge-left,
+.cassette-edge-right {
+  top: 0;
+  width: var(--cassette-depth);
+  height: 100%;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 24px, rgba(255, 255, 255, 0.04) 25px, transparent 26px),
+    linear-gradient(90deg, #282828 0%, #151515 45%, #090909 100%);
+}
+
+.cassette-edge-left {
+  left: calc(var(--cassette-depth) / -2);
+  transform: rotateY(-90deg);
+}
+
+.cassette-edge-right {
+  right: calc(var(--cassette-depth) / -2);
+  transform: rotateY(90deg);
+}
+
+.cassette-edge-left::before,
+.cassette-edge-right::before {
+  inset: 10% 7px;
 }
 
 .cassette-back-label {
@@ -834,7 +928,11 @@ button {
 .bottom-right { bottom: 16px; right: 16px; transform: rotate(-12deg); }
 
 .skills-rack {
-  margin-top: 1.75rem;
+  margin-top: 1.35rem;
+}
+
+.skills-rack .section-line h3 {
+  font-size: 0.58rem;
 }
 
 .sidebar-head {
@@ -886,16 +984,16 @@ button {
 .skill-grid {
   display: grid;
   grid-template-columns: repeat(var(--skill-count, 4), minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
 }
 
 .skill-card {
   --skill-content-scale: 1;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1.16 / 1;
   min-width: 0;
-  padding: 1rem;
-  border-radius: 18px;
+  padding: 0.75rem;
+  border-radius: 15px;
   background: rgba(16, 16, 16, 0.6);
   overflow: hidden;
 }
@@ -929,16 +1027,16 @@ button {
 }
 
 .skill-glyph {
-  width: 56px;
-  height: 56px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  margin-bottom: 0.9rem;
-  border-radius: 12px;
+  margin-bottom: 0.58rem;
+  border-radius: 10px;
   background: #181818;
   border: 1px solid rgba(255, 255, 255, 0.1);
   font-family: "Space Mono", monospace;
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   font-weight: 700;
 }
 
@@ -956,6 +1054,8 @@ button {
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  font-size: 0.76rem;
+  line-height: 1.12;
 }
 
 .selected-project h3 {
@@ -974,6 +1074,9 @@ button {
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  margin-top: 0.3rem;
+  font-size: 0.64rem;
+  line-height: 1.15;
 }
 
 .search-box {
@@ -1251,13 +1354,32 @@ button {
 }
 
 .selected-project {
-  margin: 1.2rem 1.2rem 1.4rem;
+  margin: 0.8rem 1rem 1rem;
+  padding: 0.85rem;
+  border-radius: 13px;
+}
+
+.selected-project .selected-label {
+  font-size: 0.56rem;
+}
+
+.selected-project h3 {
+  font-size: 0.92rem;
+  line-height: 1.15;
+}
+
+.selected-project p {
+  margin: 0.45rem 0 0;
+  font-size: 0.76rem;
+  line-height: 1.28;
 }
 
 .selected-project ul {
-  padding-left: 1.1rem;
-  margin: 0.9rem 0 0;
+  padding-left: 1rem;
+  margin: 0.55rem 0 0;
   color: rgba(255, 255, 255, 0.68);
+  font-size: 0.74rem;
+  line-height: 1.25;
 }
 
 .footer {
@@ -1504,7 +1626,7 @@ button {
   }
 
   .selected-project {
-    margin: 1rem;
+    margin: 0.7rem;
   }
 
   .status-meta {

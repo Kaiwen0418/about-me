@@ -124,9 +124,11 @@ export const profile = {
   projects: [
     {
       name: "Agent Benchmarking Platform",
+      playlistName: "Agent Benchmark",
       stack: "TypeScript, Next.js",
       github: "https://github.com/Kaiwen0418/agent-benchmark",
       liveUrl: "https://bench.project-echo.xyz/",
+      image: "project-images/agent-benchmark.png",
       summary: {
         en: "An interactive real-time evaluation platform for autonomous AI agents.",
         "zh-CN": "用于自治 AI Agent 的实时交互式评测平台。",
@@ -144,9 +146,11 @@ export const profile = {
     },
     {
       name: "Prediction Market Intelligence Dashboard",
+      playlistName: "Prediction Market",
       stack: "NumPy, FastAPI, React.js",
       github: "https://github.com/Kaiwen0418/prediction-market-dashboard",
       liveUrl: "https://prediction-market-intelligence-dash.vercel.app/",
+      image: "project-images/prediction-market.png",
       summary: {
         en: "A market intelligence dashboard for tracking and interpreting live prediction market signals.",
         "zh-CN": "用于追踪和解读实时预测市场信号的情报看板。",
@@ -164,9 +168,11 @@ export const profile = {
     },
     {
       name: "Object Echo",
+      playlistName: "Object Echo",
       stack: "TypeScript, Next.js",
       github: "https://github.com/Kaiwen0418/object-echo",
       liveUrl: "https://object-echo.vercel.app",
+      image: "project-images/object-echo.png",
       summary: {
         en: "A focused web project for exploring object memory, interaction, and echo-style interface feedback.",
         "zh-CN": "一个探索对象记忆、交互反馈与 echo 式界面体验的 Web 项目。",
@@ -184,8 +190,10 @@ export const profile = {
     },
     {
       name: ".NET Circuit Simulator",
+      playlistName: ".NET Circuit Sim",
       stack: ".NET, Avalonia UI, F#",
       github: "http://github.com/Kaiwen0418/issie-avalonia",
+      image: "project-images/circuit-simulator.gif",
       summary: {
         en: "A modern reimplementation of a circuit simulator using functional programming and MVU UI architecture.",
         "zh-CN": "基于函数式编程与 MVU 架构重构的现代电路模拟器。",
