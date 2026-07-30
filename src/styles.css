@@ -167,24 +167,21 @@ button {
   height: 36px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
-  color: rgba(255, 255, 255, 0.56);
-  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  transition: filter 0.18s ease, transform 0.18s ease;
 }
 
 .status-social-link svg {
-  width: 17px;
-  height: 17px;
-  fill: currentColor;
+  width: 28px;
+  height: 28px;
+  display: block;
 }
 
 .status-social-link:hover,
 .status-social-link:focus-visible {
-  color: #f5f5f5;
-  border-color: rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.07);
+  filter: brightness(1.16);
   transform: translateY(-1px);
   outline: none;
 }
@@ -327,16 +324,161 @@ button {
   --accent: #ffb000;
   position: relative;
   flex: 0 0 var(--cassette-model-width);
-  overflow: hidden;
   width: var(--cassette-model-width);
   height: var(--cassette-model-height);
-  border-radius: 20px;
-  background: linear-gradient(145deg, #222222, #111111);
-  border: 1px solid #2a2a2a;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 2px 3px rgba(255, 255, 255, 0.05);
   transform: scale(var(--cassette-scale));
   transform-origin: top center;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.6s ease, opacity 0.36s ease;
+  perspective: 1400px;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease;
+}
+
+.cassette-interactive {
+  cursor: pointer;
+  outline: none;
+}
+
+.cassette-interactive:focus-visible .cassette-face {
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.9),
+    0 0 0 2px var(--accent),
+    0 0 28px color-mix(in srgb, var(--accent) 22%, transparent),
+    inset 0 2px 3px rgba(255, 255, 255, 0.05);
+}
+
+.cassette-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 0.9s cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+
+.cassette-flipper.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.cassette-shell.settling .cassette-flipper,
+.cassette-shell.ejecting .cassette-flipper,
+.cassette-shell.inserting .cassette-flipper,
+.cassette-shell.settled .cassette-flipper {
+  transform: rotateY(0deg);
+  transition: none;
+}
+
+.cassette-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #222222, #111111);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 2px 3px rgba(255, 255, 255, 0.05);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.cassette-front {
+  transform: rotateY(0deg) translateZ(1px);
+}
+
+.cassette-back {
+  transform: rotateY(180deg) translateZ(1px);
+  padding: 34px 42px;
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 42%),
+    linear-gradient(145deg, #1f1f1f, #0d0d0d);
+}
+
+.cassette-back-label {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  padding: 22px;
+  gap: 16px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, #4b4b4b);
+  border-radius: 15px;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(255, 255, 255, 0.025) 27px),
+    #151515;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.65);
+}
+
+.cassette-back-head,
+.cassette-back-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  font-family: "Space Mono", monospace;
+  text-transform: uppercase;
+}
+
+.cassette-back-head span,
+.cassette-back-foot span {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+}
+
+.cassette-back-head strong,
+.cassette-back-foot strong {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+}
+
+.cassette-project-image {
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, transparent 49.5%, rgba(255, 255, 255, 0.06) 50%, transparent 50.5%),
+    linear-gradient(45deg, transparent 49.5%, rgba(255, 255, 255, 0.06) 50%, transparent 50.5%),
+    #090909;
+  background-position: center;
+  background-size: cover;
+}
+
+.cassette-project-image.has-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 65%, rgba(0, 0, 0, 0.42));
+  pointer-events: none;
+}
+
+.cassette-image-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.cassette-image-placeholder span,
+.cassette-image-placeholder small {
+  color: rgba(255, 255, 255, 0.38);
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.cassette-image-placeholder strong {
+  max-width: 90%;
+  margin: 10px 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.86);
+  font-family: "Space Mono", monospace;
+  font-size: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cassette-current,

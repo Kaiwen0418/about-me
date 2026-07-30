@@ -125,6 +125,8 @@ export const profile = {
     {
       name: "Agent Benchmarking Platform",
       stack: "TypeScript, Next.js",
+      github: "https://github.com/Kaiwen0418/agent-benchmark",
+      liveUrl: "https://bench.project-echo.xyz/",
       summary: {
         en: "An interactive real-time evaluation platform for autonomous AI agents.",
         "zh-CN": "用于自治 AI Agent 的实时交互式评测平台。",
@@ -143,6 +145,8 @@ export const profile = {
     {
       name: "Prediction Market Intelligence Dashboard",
       stack: "NumPy, FastAPI, React.js",
+      github: "https://github.com/Kaiwen0418/prediction-market-dashboard",
+      liveUrl: "https://prediction-market-intelligence-dash.vercel.app/",
       summary: {
         en: "A market intelligence dashboard for tracking and interpreting live prediction market signals.",
         "zh-CN": "用于追踪和解读实时预测市场信号的情报看板。",
@@ -159,8 +163,29 @@ export const profile = {
       },
     },
     {
+      name: "Object Echo",
+      stack: "TypeScript, Next.js",
+      github: "https://github.com/Kaiwen0418/object-echo",
+      liveUrl: "https://object-echo.vercel.app",
+      summary: {
+        en: "A focused web project for exploring object memory, interaction, and echo-style interface feedback.",
+        "zh-CN": "一个探索对象记忆、交互反馈与 echo 式界面体验的 Web 项目。",
+      },
+      bullets: {
+        en: [
+          "Built a compact interaction loop for object-centered exploration and response feedback.",
+          "Focused on responsive UI structure and fast deployment through a modern frontend stack.",
+        ],
+        "zh-CN": [
+          "构建围绕对象探索与响应反馈的紧凑交互流程。",
+          "聚焦响应式 UI 结构，并通过现代前端栈快速部署。",
+        ],
+      },
+    },
+    {
       name: ".NET Circuit Simulator",
       stack: ".NET, Avalonia UI, F#",
+      github: "http://github.com/Kaiwen0418/issie-avalonia",
       summary: {
         en: "A modern reimplementation of a circuit simulator using functional programming and MVU UI architecture.",
         "zh-CN": "基于函数式编程与 MVU 架构重构的现代电路模拟器。",

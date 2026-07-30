@@ -26,17 +26,22 @@ function Reel({ spinning = true, heavy = false }) {
 }
 
 function SocialIcon({ type }) {
-  if (type === "github") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2C6.48 2 2 6.58 2 12.23c0 4.52 2.87 8.35 6.84 9.71.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.91-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .08 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.36-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.95a9.3 9.3 0 0 1 2.5.35c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.59.69.49A10.25 10.25 0 0 0 22 12.23C22 6.58 17.52 2 12 2Z" />
-      </svg>
-    );
-  }
+  const isGithub = type === "github";
 
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6.5 8.25H3.25V20H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.88 6.75 1.88 1.88 0 0 0 4.88 3ZM20.75 13.27c0-3.54-1.89-5.19-4.42-5.19-2.04 0-2.95 1.12-3.46 1.91V8.25H9.62V20h3.25v-5.82c0-1.53.29-3.01 2.18-3.01 1.86 0 1.88 1.74 1.88 3.11V20h3.25l.57-6.73Z" />
+    <svg viewBox="0 0 32 32" aria-hidden="true" className={`social-mark social-mark-${type}`}>
+      <rect width="32" height="32" rx="8" fill="#080808" />
+      {isGithub ? (
+        <path
+          fill="#fff"
+          d="M16 7.2a9 9 0 0 0-2.85 17.54c.45.08.61-.2.61-.43v-1.68c-2.5.54-3.03-1.06-3.03-1.06-.41-1.04-1-1.31-1-1.31-.82-.56.06-.55.06-.55.9.06 1.38.93 1.38.93.81 1.38 2.11.98 2.63.75.08-.58.32-.98.57-1.2-2-.23-4.1-1-4.1-4.45 0-.98.35-1.79.93-2.42-.09-.23-.4-1.14.09-2.38 0 0 .76-.24 2.48.92A8.6 8.6 0 0 1 16 11.55c.77 0 1.53.1 2.25.3 1.72-1.16 2.48-.92 2.48-.92.49 1.24.18 2.15.09 2.38.58.63.93 1.44.93 2.42 0 3.46-2.11 4.21-4.11 4.44.32.28.61.83.61 1.68v2.46c0 .24.16.52.62.43A9 9 0 0 0 16 7.2Z"
+        />
+      ) : (
+        <>
+          <path fill="#fff" d="M8.3 12.3h3.2V24H8.3zM9.9 7.1a1.86 1.86 0 1 1 0 3.72 1.86 1.86 0 0 1 0-3.72Z" />
+          <path fill="#fff" d="M14.2 12.3h3.06v1.6h.04c.43-.81 1.47-1.67 3.02-1.67 3.23 0 3.83 2.13 3.83 4.9V24h-3.19v-6.1c0-1.46-.03-3.33-2.03-3.33-2.03 0-2.34 1.58-2.34 3.22V24H14.2V12.3Z" />
+        </>
+      )}
     </svg>
   );
 }
@@ -97,59 +102,118 @@ function buildStackCards(item, locale) {
     }));
 }
 
-function Cassette({ tapeDetails, accent, spinning, dictionary, className = "" }) {
+function Cassette({
+  tapeDetails,
+  accent,
+  spinning,
+  dictionary,
+  className = "",
+  flipped = false,
+  imageUrl = "",
+  interactive = false,
+  onFlip,
+}) {
+  const handleKeyDown = (event) => {
+    if (!interactive || !onFlip || (event.key !== "Enter" && event.key !== " ")) {
+      return;
+    }
+    event.preventDefault();
+    onFlip();
+  };
+
   return (
-    <div className={`cassette-body ${className}`} style={{ "--accent": accent }}>
-      <Screw className="top-left" />
-      <Screw className="top-right" />
-      <Screw className="mid-left" />
-      <Screw className="mid-right" />
-      <Screw className="bottom-left" />
-      <Screw className="bottom-right" />
+    <div
+      className={`cassette-body ${className} ${interactive ? "cassette-interactive" : ""}`}
+      style={{ "--accent": accent }}
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-label={interactive ? `${tapeDetails.title}: ${flipped ? "show front" : "show project image"}` : undefined}
+      onClick={interactive ? onFlip : undefined}
+      onKeyDown={handleKeyDown}
+    >
+      <div className={`cassette-flipper ${flipped ? "is-flipped" : ""}`}>
+        <div className="cassette-face cassette-front">
+          <Screw className="top-left" />
+          <Screw className="top-right" />
+          <Screw className="mid-left" />
+          <Screw className="mid-right" />
+          <Screw className="bottom-left" />
+          <Screw className="bottom-right" />
 
-      <div className="cassette-label">
-        <div className="cassette-head">
-          <div>
-            <h1>{tapeDetails.title}</h1>
+          <div className="cassette-label">
+            <div className="cassette-head">
+              <div>
+                <h1>{tapeDetails.title}</h1>
+              </div>
+              <div className="cassette-side">
+                <span>{dictionary.cassetteSide}</span>
+                <strong>{tapeDetails.side}</strong>
+              </div>
+            </div>
+
+            <div className="tape-window">
+              <Reel spinning={spinning} heavy />
+              <div className="tape-center">
+                <div>
+                  <span>LOG</span>
+                  <strong>{tapeDetails.log}</strong>
+                </div>
+                <div>
+                  <span>FLD</span>
+                  <strong>{tapeDetails.field}</strong>
+                </div>
+                <div>
+                  <span>SCN</span>
+                  <strong>{tapeDetails.scene}</strong>
+                </div>
+              </div>
+              <Reel spinning={spinning} />
+            </div>
+
+            <div className="cassette-foot">
+              <p>{tapeDetails.note}</p>
+              <div className="cassette-spec">
+                <span>{tapeDetails.meta}</span>
+                <strong>{tapeDetails.spec}</strong>
+              </div>
+            </div>
           </div>
-          <div className="cassette-side">
-            <span>{dictionary.cassetteSide}</span>
-            <strong>{tapeDetails.side}</strong>
+
+          <div className="cassette-bottom">
+            <span />
+            <span className="square" />
+            <span />
           </div>
         </div>
 
-        <div className="tape-window">
-          <Reel spinning={spinning} heavy />
-          <div className="tape-center">
-            <div>
-              <span>LOG</span>
-              <strong>{tapeDetails.log}</strong>
+        <div className="cassette-face cassette-back">
+          <Screw className="top-left" />
+          <Screw className="top-right" />
+          <Screw className="bottom-left" />
+          <Screw className="bottom-right" />
+          <div className="cassette-back-label">
+            <div className="cassette-back-head">
+              <span>{dictionary.projectImage}</span>
+              <strong>{tapeDetails.side} / B</strong>
             </div>
-            <div>
-              <span>FLD</span>
-              <strong>{tapeDetails.field}</strong>
+            <div
+              className={`cassette-project-image ${imageUrl ? "has-image" : ""}`}
+              style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : undefined}
+            >
+              {!imageUrl && (
+                <div className="cassette-image-placeholder">
+                  <span>IMAGE SLOT</span>
+                  <strong>{tapeDetails.title}</strong>
+                  <small>{dictionary.uploadLater}</small>
+                </div>
+              )}
             </div>
-            <div>
-              <span>SCN</span>
-              <strong>{tapeDetails.scene}</strong>
+            <div className="cassette-back-foot">
+              <span>{tapeDetails.meta}</span>
+              <strong>{tapeDetails.spec}</strong>
             </div>
           </div>
-          <Reel spinning={spinning} />
         </div>
-
-        <div className="cassette-foot">
-          <p>{tapeDetails.note}</p>
-          <div className="cassette-spec">
-            <span>{tapeDetails.meta}</span>
-            <strong>{tapeDetails.spec}</strong>
-          </div>
-        </div>
-      </div>
-
-      <div className="cassette-bottom">
-        <span />
-        <span className="square" />
-        <span />
       </div>
     </div>
   );
@@ -167,6 +231,7 @@ export default function App() {
   const [incomingEntry, setIncomingEntry] = useState(null);
   const [showPlayPopup, setShowPlayPopup] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isCassetteFlipped, setIsCassetteFlipped] = useState(false);
   const cassetteStackRef = useRef(null);
 
   useEffect(() => {
@@ -237,6 +302,8 @@ export default function App() {
         openGithub: "Open GitHub",
         currentLink: "Current Link",
         list: "List",
+        projectImage: "Project Image",
+        uploadLater: "Upload image later",
       },
       "zh-CN": {
         exp: "经验: 2+ 年",
@@ -274,6 +341,8 @@ export default function App() {
         openGithub: "打开 GitHub",
         currentLink: "当前链接",
         list: "列表",
+        projectImage: "项目图片",
+        uploadLater: "稍后上传图片",
       },
     }),
     [],
@@ -289,6 +358,7 @@ export default function App() {
         time: "00:01",
         accent: "#ffb000",
         url: profile.github,
+        imageUrl: "",
         detailsTitle: profile.name,
         detailsSummary: hero.summary,
         bullets: [
@@ -312,9 +382,11 @@ export default function App() {
         number: String(index + 1).padStart(2, "0"),
         title: project.name.toUpperCase(),
         subtitle: project.stack.toUpperCase(),
-        time: ["14:22", "08:45", "11:15"][index] || "06:30",
-        accent: ["#34d399", "#fb7185", "#fbbf24"][index] || "#60a5fa",
+        time: ["14:22", "08:45", "09:30", "11:15"][index] || "06:30",
+        accent: ["#34d399", "#fb7185", "#60a5fa", "#fbbf24"][index] || "#60a5fa",
         url: project.github || profile.github,
+        liveUrl: project.liveUrl,
+        imageUrl: project.image || "",
         detailsTitle: project.name,
         detailsSummary: project.summary[locale],
         bullets: project.bullets[locale],
@@ -329,15 +401,17 @@ export default function App() {
               ? [
                   "real-time agent evals.",
                   "prediction market signals.",
+                  "object memory interface.",
                   "circuit sim, rebuilt lean.",
                 ][index] || project.summary[locale]
               : [
                   "实时 agent 评测。",
                   "预测市场信号面板。",
+                  "对象记忆交互界面。",
                   "轻量重构电路模拟器。",
                 ][index] || project.summary[locale],
           spec: project.stack.toUpperCase(),
-          meta: ["14:22", "08:45", "11:15"][index] || "06:30",
+          meta: ["14:22", "08:45", "09:30", "11:15"][index] || "06:30",
         },
       })),
     ],
@@ -363,6 +437,7 @@ export default function App() {
       return undefined;
     }
 
+    setIsCassetteFlipped(false);
     setShowPlayPopup(false);
     setIncomingEntry(selectedEntry);
     setCassettePhase("settling");
@@ -392,6 +467,24 @@ export default function App() {
       window.clearTimeout(cleanupTimer);
     };
   }, [selectedEntry]);
+
+  useEffect(() => {
+    if (cassettePhase !== "idle") {
+      return undefined;
+    }
+
+    const flipTimer = window.setTimeout(() => {
+      setIsCassetteFlipped((value) => !value);
+    }, 5000);
+
+    return () => window.clearTimeout(flipTimer);
+  }, [cassettePhase, displayedEntry, isCassetteFlipped]);
+
+  const toggleCassetteFlip = () => {
+    if (cassettePhase === "idle") {
+      setIsCassetteFlipped((value) => !value);
+    }
+  };
 
   const changeEntry = (nextIndex) => {
     if (cassettePhase !== "idle" || nextIndex < 0 || nextIndex >= playlist.length) {
@@ -460,6 +553,10 @@ export default function App() {
                       spinning={isPlaying && cassettePhase === "idle"}
                       dictionary={dictionary}
                       className={`cassette-current ${cassettePhase === "ejecting" ? "is-ejecting" : ""}`}
+                      flipped={isCassetteFlipped}
+                      imageUrl={displayedPlaylistItem.imageUrl}
+                      interactive={cassettePhase === "idle"}
+                      onFlip={toggleCassetteFlip}
                     />
                     {incomingPlaylistItem && (
                       <Cassette
@@ -468,6 +565,7 @@ export default function App() {
                         spinning={false}
                         dictionary={dictionary}
                         className={`cassette-incoming ${cassettePhase === "inserting" ? "is-inserting" : ""}`}
+                        imageUrl={incomingPlaylistItem.imageUrl}
                       />
                     )}
                   </div>
@@ -485,7 +583,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="skill-grid" style={{ "--skill-count": stackCards.length + 1 }}>
+                <div className="skill-grid" style={{ "--skill-count": stackCards.length + (selectedPlaylistItem.liveUrl ? 2 : 1) }}>
                   {stackCards.map((card) => (
                     <SkillCard
                       key={`${selectedPlaylistItem.number}-${card.title}`}
@@ -496,6 +594,15 @@ export default function App() {
                       active={card.active}
                     />
                   ))}
+                  {selectedPlaylistItem.liveUrl && (
+                    <SkillCard
+                      letter="WWW"
+                      title={locale === "en" ? "PROJECT" : "项目"}
+                      subtitle={locale === "en" ? "Open Live Site" : "打开在线站点"}
+                      accent="#f5f5f5"
+                      href={selectedPlaylistItem.liveUrl}
+                    />
+                  )}
                   <SkillCard
                     letter="GH"
                     title="GITHUB"
@@ -675,7 +782,7 @@ export default function App() {
                 </a>
               </div>
             )}
-            <button type="button" className="play-button" onClick={() => { setIsPlaying((value) => !value); setShowPlayPopup((value) => !value); }}>
+            <button type="button" className="play-button" onClick={() => { setIsPlaying((value) => !value); setShowPlayPopup((value) => !value); toggleCassetteFlip(); }}>
               <div className="play-button-inner">
                 {isPlaying ? (
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="play-icon">
