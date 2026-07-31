@@ -1112,6 +1112,41 @@ button {
   margin-top: 0.75rem;
 }
 
+.skill-grid-motion .skill-card {
+  animation: skillCardLoad 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.skill-grid-motion .skill-card:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.skill-grid-motion .skill-card:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.skill-grid-motion .skill-card:nth-child(4) {
+  animation-delay: 0.18s;
+}
+
+@keyframes skillCardLoad {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-32px) scale(0.94);
+    box-shadow: -18px 0 24px color-mix(in srgb, var(--accent, #ffffff) 14%, transparent);
+  }
+  55% {
+    opacity: 0.88;
+    filter: blur(1px);
+    transform: translateX(5px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0) scale(1);
+  }
+}
+
 .skill-card {
   flex: 0 0 auto;
   width: 148px;
@@ -1120,6 +1155,36 @@ button {
   border-radius: 15px;
   background: rgba(16, 16, 16, 0.6);
   overflow: hidden;
+}
+
+.skill-page-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  margin-top: 0.72rem;
+}
+
+.skill-page-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: width 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.skill-page-dot.active {
+  width: 18px;
+  background: #ffb000;
+  box-shadow: 0 0 9px rgba(255, 176, 0, 0.5);
+}
+
+.skill-page-dot:focus-visible {
+  outline: 1px solid white;
+  outline-offset: 3px;
 }
 
 .skill-card-inner {

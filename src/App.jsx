@@ -273,14 +273,14 @@ function Cassette({
   experienceEntries = [],
   locale = "en",
   interactive = false,
-  onFlip,
+  onActivate,
 }) {
   const handleKeyDown = (event) => {
-    if (!interactive || !onFlip || (event.key !== "Enter" && event.key !== " ")) {
+    if (!interactive || !onActivate || (event.key !== "Enter" && event.key !== " ")) {
       return;
     }
     event.preventDefault();
-    onFlip();
+    onActivate();
   };
 
   return (
@@ -291,12 +291,10 @@ function Cassette({
       tabIndex={interactive ? 0 : undefined}
       aria-label={
         interactive
-          ? `${tapeDetails.title}: ${
-              flipped ? dictionary.showFront : backTapeDetails ? dictionary.showIntroduction : dictionary.showProjectImage
-            }`
+          ? `${tapeDetails.title}: ${spinning ? "pause playback" : "resume playback"}`
           : undefined
       }
-      onClick={interactive ? onFlip : undefined}
+      onClick={interactive ? onActivate : undefined}
       onKeyDown={handleKeyDown}
     >
       <div className={`cassette-flipper ${flipped ? "is-flipped" : ""}`}>
@@ -657,6 +655,8 @@ export default function App() {
   const displayedPlaylistItem = playlist[displayedEntry];
   const incomingPlaylistItem = incomingEntry === null ? null : playlist[incomingEntry];
   const allStackCards = useMemo(() => buildStackCards(selectedPlaylistItem, locale), [locale, selectedPlaylistItem]);
+  const profileSkillPageCount = Math.ceil(allStackCards.length / 4);
+  const profileSkillPage = Math.floor(profileSkillOffset / 4);
   const stackCards = useMemo(() => {
     if (selectedPlaylistItem.type !== "profile") {
       return allStackCards;
@@ -719,7 +719,7 @@ export default function App() {
 
     const flipTimer = window.setTimeout(() => {
       setIsCassetteFlipped((value) => !value);
-    }, 10000);
+    }, 5000);
 
     return () => window.clearTimeout(flipTimer);
   }, [cassettePhase, displayedEntry, isCassetteFlipped, isPlaying]);
@@ -731,17 +731,11 @@ export default function App() {
     }
 
     const skillTimer = window.setInterval(() => {
-      setProfileSkillOffset((offset) => (offset + 4) % allStackCards.length);
+      setProfileSkillOffset((offset) => (offset + 4 >= allStackCards.length ? 0 : offset + 4));
     }, 5000);
 
     return () => window.clearInterval(skillTimer);
   }, [allStackCards.length, selectedPlaylistItem.type]);
-
-  const toggleCassetteFlip = () => {
-    if (isPlaying && cassettePhase === "idle") {
-      setIsCassetteFlipped((value) => !value);
-    }
-  };
 
   const togglePlayback = () => {
     if (cassettePhase !== "idle") {
@@ -842,8 +836,8 @@ export default function App() {
                       backTapeDetails={displayedPlaylistItem.backTape}
                       experienceEntries={displayedPlaylistItem.type === "profile" ? profile.experience : []}
                       locale={locale}
-                      interactive={isPlaying && cassettePhase === "idle"}
-                      onFlip={toggleCassetteFlip}
+                      interactive={cassettePhase === "idle"}
+                      onActivate={togglePlayback}
                     />
                     {incomingPlaylistItem && (
                       <Cassette
@@ -878,7 +872,11 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="skill-grid" style={{ "--skill-count": 4 }}>
+                <div
+                  key={`${selectedPlaylistItem.number}-${selectedPlaylistItem.type === "profile" ? profileSkillOffset : "static"}`}
+                  className="skill-grid skill-grid-motion"
+                  style={{ "--skill-count": 4 }}
+                >
                   {stackCards.map((card) => (
                     <SkillCard
                       key={`${selectedPlaylistItem.number}-${card.title}`}
@@ -897,6 +895,20 @@ export default function App() {
                     />
                   )}
                 </div>
+                {selectedPlaylistItem.type === "profile" && profileSkillPageCount > 1 && (
+                  <div className="skill-page-dots" aria-label={locale === "en" ? "Skill card sets" : "技能卡组"}>
+                    {Array.from({ length: profileSkillPageCount }, (_, page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        className={`skill-page-dot ${page === profileSkillPage ? "active" : ""}`}
+                        onClick={() => setProfileSkillOffset(page * 4)}
+                        aria-label={locale === "en" ? `Show skill set ${page + 1}` : `显示第 ${page + 1} 组技能`}
+                        aria-current={page === profileSkillPage ? "true" : undefined}
+                      />
+                    ))}
+                  </div>
+                )}
               </section>
             </div>
           )}
