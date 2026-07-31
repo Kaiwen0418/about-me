@@ -348,10 +348,9 @@ button {
   flex: 0 0 var(--cassette-model-width);
   width: var(--cassette-model-width);
   height: var(--cassette-model-height);
-  transform: scale(var(--cassette-scale));
-  transform-origin: top center;
+  zoom: var(--cassette-scale);
   perspective: 1400px;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease;
+  transition: opacity 0.36s ease;
 }
 
 .cassette-interactive {
@@ -378,6 +377,11 @@ button {
 
 .cassette-flipper.is-flipped {
   transform: rotateY(180deg);
+}
+
+.cassette-flipper.is-flip-preparing {
+  transform: rotateY(180deg);
+  transition: none;
 }
 
 /* Once the flip lands on B, render it as a forward-facing plane to keep text crisp. */
@@ -731,7 +735,7 @@ button {
   left: 50%;
   margin-left: calc(var(--cassette-model-width) / -2);
   z-index: 1;
-  transform: translateX(-118%) rotateY(10deg) rotate(-2deg) scale(var(--cassette-scale));
+  transform: translateX(-118%) rotateY(10deg) rotate(-2deg);
   opacity: 0;
   pointer-events: none;
 }
@@ -1561,6 +1565,16 @@ button {
   letter-spacing: 0.16em;
 }
 
+.playlist-time {
+  min-width: 3.15rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.playlist-time.is-counting {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .selected-project {
   margin: 0.8rem 1rem 1rem;
   padding: 0.85rem;
@@ -1858,29 +1872,29 @@ button {
 
 @keyframes cassetteEjectRight {
   0% {
-    transform: translateY(0) rotateX(0deg) scale(var(--cassette-scale));
+    transform: translateY(0) rotateX(0deg);
     opacity: 1;
   }
   22% {
-    transform: translateX(16px) translateY(-6px) rotateY(-8deg) rotate(1deg) scale(var(--cassette-scale));
+    transform: translateX(16px) translateY(-6px) rotateY(-8deg) rotate(1deg);
   }
   100% {
-    transform: translateX(122%) translateY(-2px) rotateY(-14deg) rotate(3deg) scale(var(--cassette-scale));
+    transform: translateX(122%) translateY(-2px) rotateY(-14deg) rotate(3deg);
     opacity: 0;
   }
 }
 
 @keyframes cassetteInsertLeft {
   0% {
-    transform: translateX(-118%) translateY(0) rotateY(10deg) rotate(-2deg) scale(var(--cassette-scale));
+    transform: translateX(-118%) translateY(0) rotateY(10deg) rotate(-2deg);
     opacity: 0;
   }
   60% {
-    transform: translateX(14px) translateY(-4px) rotateY(-4deg) rotate(0.6deg) scale(var(--cassette-scale));
+    transform: translateX(14px) translateY(-4px) rotateY(-4deg) rotate(0.6deg);
     opacity: 1;
   }
   100% {
-    transform: translateY(0) rotateX(0deg) scale(var(--cassette-scale));
+    transform: translateY(0) rotateX(0deg);
     opacity: 1;
   }
 }
@@ -2164,7 +2178,7 @@ button {
   }
 
   .cassette-incoming {
-    transform: translateX(-108%) rotateY(8deg) rotate(-2deg) scale(var(--cassette-scale));
+    transform: translateX(-108%) rotateY(8deg) rotate(-2deg);
   }
 
   .mobile-project-info {

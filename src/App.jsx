@@ -7,6 +7,12 @@ const REEL_SLOWDOWN_MS = 280;
 const CASSETTE_EJECT_MS = 360;
 const CASSETTE_INSERT_MS = 400;
 const CASSETTE_SETTLE_MS = 80;
+const PLAYLIST_TRACK_SECONDS = 30;
+
+function formatTrackTime(seconds) {
+  const safeSeconds = Math.max(0, seconds);
+  return `${String(Math.floor(safeSeconds / 60)).padStart(2, "0")}:${String(safeSeconds % 60).padStart(2, "0")}`;
+}
 
 function resolveAssetUrl(path) {
   return path ? `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}` : "";
@@ -275,6 +281,7 @@ function Cassette({
   interactive = false,
   onActivate,
   backSettled = false,
+  flipPreparing = false,
 }) {
   const handleKeyDown = (event) => {
     if (!interactive || !onActivate || (event.key !== "Enter" && event.key !== " ")) {
@@ -298,7 +305,7 @@ function Cassette({
       onClick={interactive ? onActivate : undefined}
       onKeyDown={handleKeyDown}
     >
-      <div className={`cassette-flipper ${flipped ? "is-flipped" : ""} ${backSettled ? "is-back-settled" : ""}`}>
+      <div className={`cassette-flipper ${flipped ? "is-flipped" : ""} ${backSettled ? "is-back-settled" : ""} ${flipPreparing ? "is-flip-preparing" : ""}`}>
         <div className="cassette-face cassette-front">
           <Screw className="top-left" />
           <Screw className="top-right" />
@@ -448,8 +455,11 @@ export default function App() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isCassetteFlipped, setIsCassetteFlipped] = useState(false);
   const [isCassetteBackSettled, setIsCassetteBackSettled] = useState(false);
+  const [isCassetteFlipPreparing, setIsCassetteFlipPreparing] = useState(false);
+  const [trackSecondsRemaining, setTrackSecondsRemaining] = useState(PLAYLIST_TRACK_SECONDS);
   const [profileSkillOffset, setProfileSkillOffset] = useState(0);
   const cassetteStackRef = useRef(null);
+  const flipFrameRef = useRef([]);
 
   useEffect(() => {
     setDocumentLanguage(locale);
@@ -578,7 +588,6 @@ export default function App() {
         number: "00",
         title: profile.name.toUpperCase(),
         subtitle: hero.eyebrow.toUpperCase(),
-        time: "00:01",
         accent: "#ffb000",
         url: profile.github,
         imageUrl: "",
@@ -617,7 +626,6 @@ export default function App() {
         number: String(index + 1).padStart(2, "0"),
         title: (project.playlistName || project.name).toUpperCase(),
         subtitle: project.stack.toUpperCase(),
-        time: ["14:22", "08:45", "09:30", "11:15"][index] || "06:30",
         accent: ["#34d399", "#fb7185", "#60a5fa", "#fbbf24"][index] || "#60a5fa",
         url: project.github || profile.github,
         liveUrl: project.liveUrl,
@@ -679,20 +687,40 @@ export default function App() {
   const tapeDetails = displayedPlaylistItem.tape;
 
   const setCassetteSide = (showBack) => {
+    flipFrameRef.current.forEach((frame) => window.cancelAnimationFrame(frame));
+    flipFrameRef.current = [];
+
     if (showBack) {
+      setIsCassetteFlipPreparing(false);
       setIsCassetteBackSettled(false);
       setIsCassetteFlipped(true);
       return;
     }
 
     if (isCassetteBackSettled) {
+      // Restore the true 180deg pose for one painted frame before rotating to A.
+      // This prevents React/browser batching from skipping the visible flip.
+      setIsCassetteFlipPreparing(true);
       setIsCassetteBackSettled(false);
-      window.requestAnimationFrame(() => setIsCassetteFlipped(false));
+      const prepareFrame = window.requestAnimationFrame(() => {
+        const flipFrame = window.requestAnimationFrame(() => {
+          setIsCassetteFlipped(false);
+          setIsCassetteFlipPreparing(false);
+          flipFrameRef.current = [];
+        });
+        flipFrameRef.current.push(flipFrame);
+      });
+      flipFrameRef.current.push(prepareFrame);
       return;
     }
 
+    setIsCassetteFlipPreparing(false);
     setIsCassetteFlipped(false);
   };
+
+  useEffect(() => () => {
+    flipFrameRef.current.forEach((frame) => window.cancelAnimationFrame(frame));
+  }, []);
 
   useEffect(() => {
     if (selectedEntry === displayedEntry) {
@@ -700,6 +728,7 @@ export default function App() {
     }
 
     setIsCassetteBackSettled(false);
+    setIsCassetteFlipPreparing(false);
     setIsCassetteFlipped(false);
     setShowPlayPopup(false);
     setIncomingEntry(selectedEntry);
@@ -800,6 +829,35 @@ export default function App() {
     });
   };
 
+  useEffect(() => {
+    setTrackSecondsRemaining(PLAYLIST_TRACK_SECONDS);
+  }, [selectedEntry]);
+
+  useEffect(() => {
+    if (!isPlaying || cassettePhase !== "idle" || selectedEntry !== displayedEntry) {
+      return undefined;
+    }
+
+    const countdownTimer = window.setInterval(() => {
+      setTrackSecondsRemaining((seconds) => Math.max(0, seconds - 1));
+    }, 1000);
+
+    return () => window.clearInterval(countdownTimer);
+  }, [cassettePhase, displayedEntry, isPlaying, selectedEntry]);
+
+  useEffect(() => {
+    if (
+      trackSecondsRemaining !== 0
+      || !isPlaying
+      || cassettePhase !== "idle"
+      || selectedEntry !== displayedEntry
+    ) {
+      return;
+    }
+
+    changeEntry((selectedEntry + 1) % playlist.length);
+  }, [cassettePhase, displayedEntry, isPlaying, playlist.length, selectedEntry, trackSecondsRemaining]);
+
   return (
     <div className="app-shell">
       <div className="layout">
@@ -872,6 +930,7 @@ export default function App() {
                       interactive={cassettePhase === "idle"}
                       onActivate={togglePlayback}
                       backSettled={isCassetteBackSettled}
+                      flipPreparing={isCassetteFlipPreparing}
                     />
                     {incomingPlaylistItem && (
                       <Cassette
@@ -1055,7 +1114,9 @@ export default function App() {
                   <strong>{item.title}</strong>
                   <span>{item.subtitle}</span>
                 </div>
-                <span className="playlist-time">{item.time}</span>
+                <span className={`playlist-time ${selectedEntry === index && isPlaying ? "is-counting" : ""}`}>
+                  {formatTrackTime(selectedEntry === index ? trackSecondsRemaining : PLAYLIST_TRACK_SECONDS)}
+                </span>
               </button>
             ))}
           </div>
@@ -1090,7 +1151,7 @@ export default function App() {
         </button>
 
         <div className="playback">
-          <button type="button" className="transport-button icon-transport" onClick={() => changeEntry(Math.max(0, selectedEntry - 1))} disabled={cassettePhase !== "idle"}>
+          <button type="button" className="transport-button icon-transport" onClick={() => changeEntry((selectedEntry - 1 + playlist.length) % playlist.length)} disabled={cassettePhase !== "idle"}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="19 20 9 12 19 4 19 20" />
               <line x1="5" x2="5" y1="19" y2="5" />
@@ -1130,7 +1191,7 @@ export default function App() {
           <button
             type="button"
             className="transport-button icon-transport"
-            onClick={() => changeEntry(Math.min(playlist.length - 1, selectedEntry + 1))}
+            onClick={() => changeEntry((selectedEntry + 1) % playlist.length)}
             disabled={cassettePhase !== "idle"}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
