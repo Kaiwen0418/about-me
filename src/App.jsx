@@ -638,7 +638,7 @@ export default function App() {
         detailsSummary: project.summary[locale],
         bullets: project.bullets[locale],
         tape: {
-          title: project.name.length > 28 ? `${project.name.slice(0, 28)}...` : project.name,
+          title: project.cassetteName || (project.name.length > 28 ? `${project.name.slice(0, 28)}...` : project.name),
           side: String.fromCharCode(65 + index),
           log: String(index + 1).padStart(2, "0"),
           field: project.stack.split(",")[0].replace(".js", "").replace(".JS", "").slice(0, 8).toUpperCase(),

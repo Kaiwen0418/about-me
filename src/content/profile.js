@@ -149,6 +149,7 @@ export const profile = {
     {
       name: "Prediction Market Intelligence Dashboard",
       playlistName: "Prediction Market",
+      cassetteName: "Prediction Market Dashboard",
       stack: "NumPy, FastAPI, React.js",
       github: "https://github.com/Kaiwen0418/prediction-market-dashboard",
       liveUrl: "https://prediction-market-intelligence-dash.vercel.app/",
