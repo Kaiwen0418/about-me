@@ -380,6 +380,20 @@ button {
   transform: rotateY(180deg);
 }
 
+/* Once the flip lands on B, render it as a forward-facing plane to keep text crisp. */
+.cassette-flipper.is-flipped.is-back-settled {
+  transform: translateZ(0);
+  transition: none;
+}
+
+.cassette-flipper.is-flipped.is-back-settled .cassette-front {
+  visibility: hidden;
+}
+
+.cassette-flipper.is-flipped.is-back-settled .cassette-back {
+  transform: translateZ(calc(var(--cassette-depth) / 2));
+}
+
 .cassette-shell.settling .cassette-flipper,
 .cassette-shell.ejecting .cassette-flipper,
 .cassette-shell.inserting .cassette-flipper,
@@ -2120,8 +2134,28 @@ button {
 
   .availability-box {
     flex-wrap: nowrap;
-    width: auto;
+    width: 100%;
+    overflow: hidden;
     padding: 0.65rem 0.8rem;
+  }
+
+  .availability-state {
+    min-width: 0;
+    width: 100%;
+    gap: 0.45rem;
+  }
+
+  .availability-state .led-dot {
+    flex: 0 0 auto;
+  }
+
+  .state-text {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .cassette-stage {
@@ -2269,7 +2303,8 @@ button {
   }
 
   .state-text {
-    font-size: 0.76rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
   }
 
   .playback {

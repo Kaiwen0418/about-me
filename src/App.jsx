@@ -274,6 +274,7 @@ function Cassette({
   locale = "en",
   interactive = false,
   onActivate,
+  backSettled = false,
 }) {
   const handleKeyDown = (event) => {
     if (!interactive || !onActivate || (event.key !== "Enter" && event.key !== " ")) {
@@ -297,7 +298,7 @@ function Cassette({
       onClick={interactive ? onActivate : undefined}
       onKeyDown={handleKeyDown}
     >
-      <div className={`cassette-flipper ${flipped ? "is-flipped" : ""}`}>
+      <div className={`cassette-flipper ${flipped ? "is-flipped" : ""} ${backSettled ? "is-back-settled" : ""}`}>
         <div className="cassette-face cassette-front">
           <Screw className="top-left" />
           <Screw className="top-right" />
@@ -446,6 +447,7 @@ export default function App() {
   const [showPlayPopup, setShowPlayPopup] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isCassetteFlipped, setIsCassetteFlipped] = useState(false);
+  const [isCassetteBackSettled, setIsCassetteBackSettled] = useState(false);
   const [profileSkillOffset, setProfileSkillOffset] = useState(0);
   const cassetteStackRef = useRef(null);
 
@@ -676,11 +678,28 @@ export default function App() {
   ];
   const tapeDetails = displayedPlaylistItem.tape;
 
+  const setCassetteSide = (showBack) => {
+    if (showBack) {
+      setIsCassetteBackSettled(false);
+      setIsCassetteFlipped(true);
+      return;
+    }
+
+    if (isCassetteBackSettled) {
+      setIsCassetteBackSettled(false);
+      window.requestAnimationFrame(() => setIsCassetteFlipped(false));
+      return;
+    }
+
+    setIsCassetteFlipped(false);
+  };
+
   useEffect(() => {
     if (selectedEntry === displayedEntry) {
       return undefined;
     }
 
+    setIsCassetteBackSettled(false);
     setIsCassetteFlipped(false);
     setShowPlayPopup(false);
     setIncomingEntry(selectedEntry);
@@ -718,11 +737,25 @@ export default function App() {
     }
 
     const flipTimer = window.setTimeout(() => {
-      setIsCassetteFlipped((value) => !value);
+      setCassetteSide(!isCassetteFlipped);
     }, 5000);
 
     return () => window.clearTimeout(flipTimer);
-  }, [cassettePhase, displayedEntry, isCassetteFlipped, isPlaying]);
+  }, [cassettePhase, displayedEntry, isCassetteBackSettled, isCassetteFlipped, isPlaying]);
+
+  useEffect(() => {
+    setIsCassetteBackSettled(false);
+
+    if (!isCassetteFlipped || cassettePhase !== "idle") {
+      return undefined;
+    }
+
+    const settleTimer = window.setTimeout(() => {
+      setIsCassetteBackSettled(true);
+    }, 1150);
+
+    return () => window.clearTimeout(settleTimer);
+  }, [cassettePhase, isCassetteFlipped]);
 
   useEffect(() => {
     if (selectedPlaylistItem.type !== "profile" || allStackCards.length <= 4) {
@@ -744,13 +777,13 @@ export default function App() {
 
     if (isPlaying) {
       setIsPlaying(false);
-      setIsCassetteFlipped(true);
+      setCassetteSide(true);
       setShowPlayPopup(true);
       return;
     }
 
     setIsPlaying(true);
-    setIsCassetteFlipped(false);
+    setCassetteSide(false);
     setShowPlayPopup(false);
   };
 
@@ -838,6 +871,7 @@ export default function App() {
                       locale={locale}
                       interactive={cassettePhase === "idle"}
                       onActivate={togglePlayback}
+                      backSettled={isCassetteBackSettled}
                     />
                     {incomingPlaylistItem && (
                       <Cassette
