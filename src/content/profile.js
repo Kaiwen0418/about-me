@@ -127,7 +127,7 @@ export const profile = {
     {
       name: "Agent Benchmarking Platform",
       playlistName: "Agent Benchmark",
-      stack: "TypeScript, Next.js",
+      stack: "TypeScript, Next.js, Docker",
       github: "https://github.com/Kaiwen0418/agent-benchmark",
       liveUrl: "https://bench.project-echo.xyz/",
       image: "project-images/agent-benchmark.png",
@@ -171,7 +171,7 @@ export const profile = {
     {
       name: "Object Echo",
       playlistName: "Object Echo",
-      stack: "TypeScript, Next.js",
+      stack: "TypeScript, Next.js, React.js",
       github: "https://github.com/Kaiwen0418/object-echo",
       liveUrl: "https://object-echo.vercel.app",
       image: "project-images/object-echo.png",
@@ -193,7 +193,7 @@ export const profile = {
     {
       name: ".NET Circuit Simulator",
       playlistName: ".NET Circuit Sim",
-      stack: ".NET, Avalonia UI, F#",
+      stack: ".NET, Avalonia UI, F#, Electron.js",
       github: "http://github.com/Kaiwen0418/issie-avalonia",
       image: "project-images/circuit-simulator.gif",
       summary: {
@@ -223,6 +223,7 @@ export const profile = {
       "PostgreSQL",
       "Redis",
       "BullMQ",
+      "Docker",
       "Electron.js",
       ".NET",
       "SQLite",

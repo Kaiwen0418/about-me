@@ -105,6 +105,26 @@ function TechIcon({ name, accent }) {
     );
   }
 
+  if (normalized === "docker") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon" style={{ color: accent }}>
+        <path d="M6 14h4v-3h4v3h4v-3h4v3h4v4c0 4-3.1 7-7.2 7H13.2C9.2 25 6 21.8 6 18v-4Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M10 18h4m0 0h4m0 0h4M11 8h3m1 0h3m1 0h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (normalized === "electronjs") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon" style={{ color: accent }}>
+        <circle cx="16" cy="16" r="2.5" fill="currentColor" />
+        <ellipse cx="16" cy="16" rx="12" ry="4.7" fill="none" stroke="currentColor" strokeWidth="1.7" />
+        <ellipse cx="16" cy="16" rx="12" ry="4.7" fill="none" stroke="currentColor" strokeWidth="1.7" transform="rotate(60 16 16)" />
+        <ellipse cx="16" cy="16" rx="12" ry="4.7" fill="none" stroke="currentColor" strokeWidth="1.7" transform="rotate(120 16 16)" />
+      </svg>
+    );
+  }
+
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon tech-icon-label" style={{ color: accent }}>
       {normalized === "typescript" && <rect x="4" y="4" width="24" height="24" rx="2" fill="currentColor" opacity="0.2" />}
@@ -188,12 +208,39 @@ function SelectedInfo({ item, locale, dictionary, className, as: Container = "ar
 
 function buildStackCards(item, locale) {
   if (item.type === "profile") {
-    return [
-      { letter: "T", title: "TYPESCRIPT", subtitle: locale === "en" ? "Type-Safe Systems" : "类型安全系统", accent: "#60a5fa", active: true },
-      { letter: "F", title: "FASTAPI", subtitle: locale === "en" ? "Backend Services" : "后端服务", accent: "#34d399" },
-      { letter: "R", title: "REACT", subtitle: locale === "en" ? "Frontend Interface" : "前端界面", accent: "#fb7185" },
-      { letter: "D", title: "POSTGRES", subtitle: locale === "en" ? "Data Layer" : "数据层", accent: "#c084fc" },
-    ];
+    const allProjectSkills = [...new Set(profile.projects.flatMap((project) => project.stack.split(",").map((part) => part.trim())))];
+    const labels = locale === "en"
+      ? {
+          "TypeScript": "Type-Safe Systems",
+          "Next.js": "Framework Layer",
+          Docker: "Container Runtime",
+          "NumPy": "Data Computing",
+          FastAPI: "Backend Services",
+          "React.js": "Frontend Interface",
+          ".NET": "Primary Runtime",
+          "Avalonia UI": "Framework Layer",
+          "F#": "Functional Systems",
+          "Electron.js": "Desktop Runtime",
+        }
+      : {
+          "TypeScript": "类型安全系统",
+          "Next.js": "框架层",
+          Docker: "容器运行时",
+          "NumPy": "数据计算",
+          FastAPI: "后端服务",
+          "React.js": "前端界面",
+          ".NET": "核心运行时",
+          "Avalonia UI": "框架层",
+          "F#": "函数式系统",
+          "Electron.js": "桌面运行时",
+        };
+
+    return allProjectSkills.map((title, index) => ({
+      title,
+      subtitle: labels[title] || (locale === "en" ? "Project Stack" : "项目技术栈"),
+      accent: ["#60a5fa", "#f5f5f5", "#38bdf8", "#eab308", "#34d399", "#fb7185", "#8b5cf6", "#f97316", "#06b6d4", "#a3e635"][index] || "#f5f5f5",
+      active: index === 0,
+    }));
   }
 
   const subtitles =
@@ -401,6 +448,7 @@ export default function App() {
   const [showPlayPopup, setShowPlayPopup] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isCassetteFlipped, setIsCassetteFlipped] = useState(false);
+  const [profileSkillOffset, setProfileSkillOffset] = useState(0);
   const cassetteStackRef = useRef(null);
 
   useEffect(() => {
@@ -608,7 +656,16 @@ export default function App() {
   const selectedPlaylistItem = playlist[selectedEntry];
   const displayedPlaylistItem = playlist[displayedEntry];
   const incomingPlaylistItem = incomingEntry === null ? null : playlist[incomingEntry];
-  const stackCards = useMemo(() => buildStackCards(selectedPlaylistItem, locale), [locale, selectedPlaylistItem]);
+  const allStackCards = useMemo(() => buildStackCards(selectedPlaylistItem, locale), [locale, selectedPlaylistItem]);
+  const stackCards = useMemo(() => {
+    if (selectedPlaylistItem.type !== "profile") {
+      return allStackCards;
+    }
+
+    return Array.from({ length: Math.min(4, allStackCards.length) }, (_, index) =>
+      allStackCards[(profileSkillOffset + index) % allStackCards.length],
+    );
+  }, [allStackCards, profileSkillOffset, selectedPlaylistItem.type]);
   const filteredSkills = [...profile.skills.languages, ...profile.skills.technologies].filter((item) =>
     item.toLowerCase().includes(search.toLowerCase()),
   );
@@ -667,6 +724,19 @@ export default function App() {
     return () => window.clearTimeout(flipTimer);
   }, [cassettePhase, displayedEntry, isCassetteFlipped, isPlaying]);
 
+  useEffect(() => {
+    if (selectedPlaylistItem.type !== "profile" || allStackCards.length <= 4) {
+      setProfileSkillOffset(0);
+      return undefined;
+    }
+
+    const skillTimer = window.setInterval(() => {
+      setProfileSkillOffset((offset) => (offset + 4) % allStackCards.length);
+    }, 5000);
+
+    return () => window.clearInterval(skillTimer);
+  }, [allStackCards.length, selectedPlaylistItem.type]);
+
   const toggleCassetteFlip = () => {
     if (isPlaying && cassettePhase === "idle") {
       setIsCassetteFlipped((value) => !value);
@@ -686,6 +756,7 @@ export default function App() {
     }
 
     setIsPlaying(true);
+    setIsCassetteFlipped(false);
     setShowPlayPopup(false);
   };
 
