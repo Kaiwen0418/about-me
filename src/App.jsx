@@ -50,7 +50,77 @@ function SocialIcon({ type }) {
   );
 }
 
-function SkillCard({ letter, title, subtitle, accent, active = false, href = "" }) {
+function TechIcon({ name, accent }) {
+  const normalized = name.toLowerCase().replaceAll(".", "").replaceAll(" ", "").replaceAll("#", "");
+  const label = {
+    typescript: "TS",
+    fastapi: "FA",
+    react: "R",
+    reactjs: "R",
+    postgres: "PG",
+    postgresql: "PG",
+    nextjs: "N",
+    numpy: "NP",
+    net: ".N",
+    avaloniaui: "A",
+    f: "F#",
+    project: "↗",
+  }[normalized] || name.slice(0, 2).toUpperCase();
+
+  if (normalized === "react" || normalized === "reactjs") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon" style={{ color: accent }}>
+        <ellipse cx="16" cy="16" rx="12" ry="4.8" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <ellipse cx="16" cy="16" rx="12" ry="4.8" fill="none" stroke="currentColor" strokeWidth="1.8" transform="rotate(60 16 16)" />
+        <ellipse cx="16" cy="16" rx="12" ry="4.8" fill="none" stroke="currentColor" strokeWidth="1.8" transform="rotate(120 16 16)" />
+        <circle cx="16" cy="16" r="2.3" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (normalized === "postgres" || normalized === "postgresql") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon" style={{ color: accent }}>
+        <ellipse cx="16" cy="8" rx="9" ry="3.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M7 8v10c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V8M7 13c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M13 25h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (normalized === "fastapi") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon" style={{ color: accent }}>
+        <path d="M18.5 3.5 8.8 17h6l-1.3 11.5L23.2 15h-6L18.5 3.5Z" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (normalized === "numpy") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon" style={{ color: accent }}>
+        <path d="M6.5 7.5h7v7h-7zM18.5 7.5h7v7h-7zM6.5 18.5h7v7h-7zM18.5 18.5h7v7h-7z" fill="none" stroke="currentColor" strokeWidth="1.7" />
+        <path d="m8.5 12 3-3m9 3 3-3m-15 14 3-3m9 3 3-3" stroke="currentColor" strokeWidth="1.4" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true" className="tech-icon tech-icon-label" style={{ color: accent }}>
+      {normalized === "typescript" && <rect x="4" y="4" width="24" height="24" rx="2" fill="currentColor" opacity="0.2" />}
+      {normalized === "nextjs" && <path d="M7 24V8l18 16V8" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />}
+      {normalized === "avaloniaui" && <path d="m16 5 10 22H6L16 5Zm0 7-3.2 9h6.4L16 12Z" fill="currentColor" />}
+      {normalized === "project" && <path d="M8 24 24 8m-10 0h10v10" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />}
+      {!['nextjs', 'avaloniaui', 'project'].includes(normalized) && (
+        <text x="16" y="20.2" textAnchor="middle" fill="currentColor" fontSize={label.length > 2 ? "9" : "13"} fontWeight="700" fontFamily="Space Mono, monospace">
+          {label}
+        </text>
+      )}
+    </svg>
+  );
+}
+
+function SkillCard({ title, subtitle, accent, active = false, href = "" }) {
   const CardElement = href ? "a" : "article";
 
   return (
@@ -66,8 +136,8 @@ function SkillCard({ letter, title, subtitle, accent, active = false, href = "" 
         : {})}
     >
       <div className="skill-card-inner">
-        <div className="skill-glyph" style={{ color: accent }}>
-          {letter}
+        <div className="skill-glyph">
+          <TechIcon name={title} accent={accent} />
         </div>
         <div>
           <h4>{title}</h4>
@@ -75,6 +145,44 @@ function SkillCard({ letter, title, subtitle, accent, active = false, href = "" 
         </div>
       </div>
     </CardElement>
+  );
+}
+
+function SelectedInfo({ item, locale, dictionary, className, as: Container = "article" }) {
+  return (
+    <Container className={className} style={{ "--accent": item.accent }}>
+      <div className="info-heading">
+        <span className="selected-label">{dictionary.selected}</span>
+        <a
+          className="info-github-link"
+          href={item.url}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open ${item.detailsTitle} on GitHub`}
+          title="Open GitHub"
+        >
+          <SocialIcon type="github" />
+        </a>
+      </div>
+      <h3>{item.detailsTitle}</h3>
+      <p>{item.detailsSummary}</p>
+      <ul>
+        {item.bullets.map((bullet) => (
+          <li key={bullet}>{bullet}</li>
+        ))}
+      </ul>
+      {item.type === "profile" && (
+        <section className="info-experience" aria-label={dictionary.experience}>
+          <span className="info-experience-label">{dictionary.experience}</span>
+          {profile.experience.map((entry) => (
+            <article className="info-experience-entry" key={entry.company}>
+              <strong>{entry.role[locale]}</strong>
+              <span>{entry.company} · {entry.period}</span>
+            </article>
+          ))}
+        </section>
+      )}
+    </Container>
   );
 }
 
@@ -115,6 +223,8 @@ function Cassette({
   flipped = false,
   imageUrl = "",
   backTapeDetails = null,
+  experienceEntries = [],
+  locale = "en",
   interactive = false,
   onFlip,
 }) {
@@ -206,46 +316,31 @@ function Cassette({
               <Screw className="mid-right" />
               <Screw className="bottom-left" />
               <Screw className="bottom-right" />
-
-              <div className="cassette-label">
-                <div className="cassette-head">
-                  <div>
-                    <h1>{backTapeDetails.title}</h1>
-                  </div>
-                  <div className="cassette-side">
-                    <span>{dictionary.cassetteSide}</span>
-                    <strong>{backTapeDetails.side}</strong>
-                  </div>
-                </div>
-
-                <div className="tape-window">
-                  <Reel spinning={spinning} heavy />
-                  <div className="tape-center">
-                    <div>
-                      <span>LOG</span>
-                      <strong>{backTapeDetails.log}</strong>
-                    </div>
-                    <div>
-                      <span>FLD</span>
-                      <strong>{backTapeDetails.field}</strong>
-                    </div>
-                    <div>
-                      <span>SCN</span>
-                      <strong>{backTapeDetails.scene}</strong>
-                    </div>
-                  </div>
-                  <Reel spinning={spinning} />
-                </div>
-
-                <div className="cassette-foot cassette-back-intro">
-                  <p>{backTapeDetails.note}</p>
-                  <div className="cassette-spec">
-                    <span>{backTapeDetails.meta}</span>
-                    <strong>{backTapeDetails.spec}</strong>
-                  </div>
+              <div className="experience-sheet">
+                <header className="experience-sheet-head">
+                  <span>{locale === "en" ? "Side B / Experience" : "B 面 / 工作经历"}</span>
+                  <strong>KL / 2026</strong>
+                </header>
+                <div className="experience-sheet-grid">
+                  {experienceEntries.map((entry, index) => (
+                    <article className={`experience-sheet-entry experience-sheet-entry-${index + 1}`} key={entry.company}>
+                      <div className="experience-entry-title">
+                        <h2>{entry.role[locale]}</h2>
+                        <time>{entry.period}</time>
+                      </div>
+                      <p className="experience-entry-company">
+                        <strong>{entry.company}</strong>
+                        <span>{entry.location}</span>
+                      </p>
+                      <ul>
+                        {entry.bullets[locale].map((bullet) => (
+                          <li key={bullet}>{bullet}</li>
+                        ))}
+                      </ul>
+                    </article>
+                  ))}
                 </div>
               </div>
-
               <div className="cassette-bottom">
                 <span />
                 <span className="square" />
@@ -444,7 +539,6 @@ export default function App() {
         bullets: [
           profile.location,
           profile.email,
-          "github.com/Kaiwen0418",
         ],
         tape: {
           title: "Kaiwen Liu / Profile",
@@ -562,21 +656,37 @@ export default function App() {
   }, [selectedEntry]);
 
   useEffect(() => {
-    if (cassettePhase !== "idle") {
+    if (!isPlaying || cassettePhase !== "idle") {
       return undefined;
     }
 
     const flipTimer = window.setTimeout(() => {
       setIsCassetteFlipped((value) => !value);
-    }, 5000);
+    }, 10000);
 
     return () => window.clearTimeout(flipTimer);
-  }, [cassettePhase, displayedEntry, isCassetteFlipped]);
+  }, [cassettePhase, displayedEntry, isCassetteFlipped, isPlaying]);
 
   const toggleCassetteFlip = () => {
-    if (cassettePhase === "idle") {
+    if (isPlaying && cassettePhase === "idle") {
       setIsCassetteFlipped((value) => !value);
     }
+  };
+
+  const togglePlayback = () => {
+    if (cassettePhase !== "idle") {
+      return;
+    }
+
+    if (isPlaying) {
+      setIsPlaying(false);
+      setIsCassetteFlipped(true);
+      setShowPlayPopup(true);
+      return;
+    }
+
+    setIsPlaying(true);
+    setShowPlayPopup(false);
   };
 
   const changeEntry = (nextIndex) => {
@@ -633,6 +743,16 @@ export default function App() {
                   >
                     <SocialIcon type="linkedin" />
                   </a>
+                  <a
+                    className="status-cv-link"
+                    href={resolveAssetUrl(profile.cv)}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={locale === "en" ? "Open CV PDF" : "打开简历 PDF"}
+                    title={locale === "en" ? "Open CV" : "打开简历"}
+                  >
+                    CV
+                  </a>
                 </div>
               </header>
 
@@ -649,7 +769,9 @@ export default function App() {
                       flipped={isCassetteFlipped}
                       imageUrl={displayedPlaylistItem.imageUrl}
                       backTapeDetails={displayedPlaylistItem.backTape}
-                      interactive={cassettePhase === "idle"}
+                      experienceEntries={displayedPlaylistItem.type === "profile" ? profile.experience : []}
+                      locale={locale}
+                      interactive={isPlaying && cassettePhase === "idle"}
                       onFlip={toggleCassetteFlip}
                     />
                     {incomingPlaylistItem && (
@@ -666,6 +788,14 @@ export default function App() {
                 </div>
               </section>
 
+              <SelectedInfo
+                item={selectedPlaylistItem}
+                locale={locale}
+                dictionary={dictionary}
+                className="mobile-project-info"
+                as="section"
+              />
+
               <section className="skills-rack">
                 <div className="section-line">
                   <h3>{selectedPlaylistItem.type === "profile" ? dictionary.coreStack : selectedPlaylistItem.subtitle}</h3>
@@ -677,11 +807,10 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="skill-grid" style={{ "--skill-count": stackCards.length + (selectedPlaylistItem.liveUrl ? 2 : 1) }}>
+                <div className="skill-grid" style={{ "--skill-count": 4 }}>
                   {stackCards.map((card) => (
                     <SkillCard
                       key={`${selectedPlaylistItem.number}-${card.title}`}
-                      letter={card.letter}
                       title={card.title}
                       subtitle={card.subtitle}
                       accent={card.accent}
@@ -690,24 +819,12 @@ export default function App() {
                   ))}
                   {selectedPlaylistItem.liveUrl && (
                     <SkillCard
-                      letter="WWW"
                       title={locale === "en" ? "PROJECT" : "项目"}
                       subtitle={locale === "en" ? "Open Live Site" : "打开在线站点"}
                       accent="#f5f5f5"
                       href={selectedPlaylistItem.liveUrl}
                     />
                   )}
-                  <SkillCard
-                    letter="GH"
-                    title="GITHUB"
-                    subtitle={
-                      selectedPlaylistItem.type === "profile"
-                        ? locale === "en" ? "Open Profile" : "打开主页"
-                        : locale === "en" ? "Open Repository" : "打开仓库"
-                    }
-                    accent="#f5f5f5"
-                    href={selectedPlaylistItem.url}
-                  />
                 </div>
               </section>
             </div>
@@ -826,16 +943,12 @@ export default function App() {
             ))}
           </div>
 
-          <article className="selected-project" style={{ "--accent": selectedPlaylistItem.accent }}>
-            <span className="selected-label">{dictionary.selected}</span>
-            <h3>{selectedPlaylistItem.detailsTitle}</h3>
-            <p>{selectedPlaylistItem.detailsSummary}</p>
-            <ul>
-              {selectedPlaylistItem.bullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
-              ))}
-            </ul>
-          </article>
+          <SelectedInfo
+            item={selectedPlaylistItem}
+            locale={locale}
+            dictionary={dictionary}
+            className="selected-project"
+          />
         </aside>
       </div>
       <button
@@ -876,7 +989,13 @@ export default function App() {
                 </a>
               </div>
             )}
-            <button type="button" className="play-button" onClick={() => { setIsPlaying((value) => !value); setShowPlayPopup((value) => !value); toggleCassetteFlip(); }}>
+            <button
+              type="button"
+              className="play-button"
+              onClick={togglePlayback}
+              disabled={cassettePhase !== "idle"}
+              aria-label={isPlaying ? "Pause and hold cassette back" : "Resume cassette playback"}
+            >
               <div className="play-button-inner">
                 {isPlaying ? (
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="play-icon">

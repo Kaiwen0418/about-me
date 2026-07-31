@@ -1,23 +1,24 @@
 export const profile = {
   name: "Kaiwen Liu",
-  email: "kawienliu0811@gmail.com",
+  email: "kaiwenliu0811@outlook.com",
   phone: "07864873860",
   location: "London, UK",
   github: "https://github.com/Kaiwen0418",
   linkedin: "https://www.linkedin.com/in/kaiwen-liu-5237911b9",
+  cv: "cv/KaiwenLiu-cv-2026.pdf",
   hero: {
     en: {
       eyebrow: "Software Engineer",
       title: "Building reliable product systems from interfaces down to infrastructure.",
       summary:
-        "MEng graduate from Imperial College London with production experience across blockchain infrastructure, AI tooling, and cross-platform applications.",
+        "Software engineer focused on backend systems, AI tooling, and blockchain infrastructure.",
       status: "Open to software engineering opportunities",
     },
     "zh-CN": {
       eyebrow: "软件工程师",
       title: "从交互界面到基础设施，专注构建稳定可靠的产品系统。",
       summary:
-        "帝国理工电子与信息工程硕士背景，具备区块链基础设施、AI 工具链与跨平台应用的实际交付经验。",
+        "专注后端系统、AI 工具与区块链基础设施的软件工程师。",
       status: "开放软件工程相关机会",
     },
   },
@@ -73,8 +74,10 @@ export const profile = {
       },
       bullets: {
         en: [
-          "Developed distributed backend services for blockchain transaction processing across EVM and Solana ecosystems, including on-chain event monitoring, wallet orchestration, and automated settlement workflows.",
-          "Designed fault-tolerant microservices with TypeScript, FastAPI, PostgreSQL, Redis, and BullMQ, using idempotent execution and explicit state handling for high-volume transaction reliability.",
+          "Built backend services for transactions on EVM and Solana networks using TypeScript, Python, FastAPI, and PostgreSQL, covering on-chain wallet orchestration and transaction status tracking.",
+          "Improved API response times by 20% through PostgreSQL query optimisation and Redis caching, and built BullMQ-based asynchronous workflows to improve reliability and reduce RPC calls and costs.",
+          "Developed more than 50 RESTful API endpoints secured with JWT authentication, role-based access control, request validation, and consistent error handling to support secure, scalable service integration.",
+          "Built unit and integration test suites covering APIs, database operations, queue processing, and transaction workflows, harnessing autonomous AI coding agents with a test-oriented workflow for implementation validation, debugging, and regression verification prior to GitHub Actions and GCP deployment pipelines.",
         ],
         "zh-CN": [
           "为 EVM 与 Solana 生态的区块链交易处理开发分布式后端服务，覆盖链上事件监控、钱包编排与自动结算流程。",
@@ -92,8 +95,7 @@ export const profile = {
       },
       bullets: {
         en: [
-          "Tutored third-year students in advanced C++ and real-time embedded development for an STM32-based music synthesizer project.",
-          "Supported debugging, optimization, and hardware integration during design, implementation, and testing phases.",
+          "Supported third-year students on an STM32-based music synthesiser project, advising on C++ development, real-time debugging, code optimisation, testing, and hardware integration.",
         ],
         "zh-CN": [
           "指导三年级学生完成基于 STM32 音乐合成器项目的高级 C++ 与实时嵌入式开发。",
@@ -111,8 +113,8 @@ export const profile = {
       },
       bullets: {
         en: [
-          "Built responsive web pages and multi-platform applications with Vue.js and Electron.js for a product serving more than 200,000 users.",
-          "Worked with the machine learning team on Flask APIs, reducing response time by 50% and cutting compute usage by 20%.",
+          "Built cross-platform AI education applications using Vue.js, Electron.js, and FastAPI, serving more than 200,000 users across mobile, desktop, and web platforms.",
+          "Developed a LaTeX-to-Braille translator supporting China's national mathematical Braille standard, implementing notation rules distinct from Nemeth and Unified English Braille for use by teachers and students at Zhangjiakou Special Education School.",
         ],
         "zh-CN": [
           "使用 Vue.js 与 Electron.js 开发响应式网页和跨平台应用，服务超 20 万用户。",
