@@ -130,7 +130,7 @@ export const profile = {
       stack: "TypeScript, Next.js, Docker",
       github: "https://github.com/Kaiwen0418/agent-benchmark",
       liveUrl: "https://bench.project-echo.xyz/",
-      image: "project-images/agent-benchmark.png",
+      image: "project-images/agent-benchmark.gif",
       summary: {
         en: "An interactive real-time evaluation platform for autonomous AI agents.",
         "zh-CN": "用于自治 AI Agent 的实时交互式评测平台。",
@@ -152,7 +152,7 @@ export const profile = {
       stack: "NumPy, FastAPI, React.js",
       github: "https://github.com/Kaiwen0418/prediction-market-dashboard",
       liveUrl: "https://prediction-market-intelligence-dash.vercel.app/",
-      image: "project-images/prediction-market.png",
+      image: "project-images/prediction-market.gif",
       summary: {
         en: "A market intelligence dashboard for tracking and interpreting live prediction market signals.",
         "zh-CN": "用于追踪和解读实时预测市场信号的情报看板。",
@@ -174,7 +174,7 @@ export const profile = {
       stack: "TypeScript, Next.js, React.js",
       github: "https://github.com/Kaiwen0418/object-echo",
       liveUrl: "https://object-echo.vercel.app",
-      image: "project-images/object-echo.png",
+      image: "project-images/object-echo.gif",
       summary: {
         en: "A focused web project for exploring object memory, interaction, and echo-style interface feedback.",
         "zh-CN": "一个探索对象记忆、交互反馈与 echo 式界面体验的 Web 项目。",

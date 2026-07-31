@@ -7,6 +7,7 @@ const REEL_SLOWDOWN_MS = 280;
 const CASSETTE_EJECT_MS = 360;
 const CASSETTE_INSERT_MS = 400;
 const CASSETTE_SETTLE_MS = 80;
+const CASSETTE_FLIP_MS = 1150;
 const PLAYLIST_TRACK_SECONDS = 30;
 
 function formatTrackTime(seconds) {
@@ -456,10 +457,13 @@ export default function App() {
   const [isCassetteFlipped, setIsCassetteFlipped] = useState(false);
   const [isCassetteBackSettled, setIsCassetteBackSettled] = useState(false);
   const [isCassetteFlipPreparing, setIsCassetteFlipPreparing] = useState(false);
+  const [isEntrySwitchPreparing, setIsEntrySwitchPreparing] = useState(false);
+  const [flipCounter, setFlipCounter] = useState(0);
   const [trackSecondsRemaining, setTrackSecondsRemaining] = useState(PLAYLIST_TRACK_SECONDS);
   const [profileSkillOffset, setProfileSkillOffset] = useState(0);
   const cassetteStackRef = useRef(null);
   const flipFrameRef = useRef([]);
+  const entrySwitchTimerRef = useRef(null);
 
   useEffect(() => {
     setDocumentLanguage(locale);
@@ -529,7 +533,7 @@ export default function App() {
         openGithub: "Open GitHub",
         currentLink: "Current Link",
         list: "List",
-        projectImage: "Project Image",
+        projectImage: "Project Loop",
         uploadLater: "Upload image later",
         showFront: "show front",
         showProjectImage: "show project image",
@@ -571,7 +575,7 @@ export default function App() {
         openGithub: "打开 GitHub",
         currentLink: "当前链接",
         list: "列表",
-        projectImage: "项目图片",
+        projectImage: "项目演示",
         uploadLater: "稍后上传图片",
         showFront: "显示正面",
         showProjectImage: "显示项目图片",
@@ -685,6 +689,7 @@ export default function App() {
     profile.experience[2],
   ];
   const tapeDetails = displayedPlaylistItem.tape;
+  const isCassetteLocked = cassettePhase !== "idle" || isEntrySwitchPreparing;
 
   const setCassetteSide = (showBack) => {
     flipFrameRef.current.forEach((frame) => window.cancelAnimationFrame(frame));
@@ -720,6 +725,7 @@ export default function App() {
 
   useEffect(() => () => {
     flipFrameRef.current.forEach((frame) => window.cancelAnimationFrame(frame));
+    window.clearTimeout(entrySwitchTimerRef.current);
   }, []);
 
   useEffect(() => {
@@ -729,6 +735,7 @@ export default function App() {
 
     setIsCassetteBackSettled(false);
     setIsCassetteFlipPreparing(false);
+    setIsEntrySwitchPreparing(false);
     setIsCassetteFlipped(false);
     setShowPlayPopup(false);
     setIncomingEntry(selectedEntry);
@@ -749,6 +756,7 @@ export default function App() {
 
     const cleanupTimer = window.setTimeout(() => {
       setIncomingEntry(null);
+      setFlipCounter(4);
       setCassettePhase("idle");
     }, REEL_SLOWDOWN_MS + CASSETTE_EJECT_MS + CASSETTE_INSERT_MS + CASSETTE_SETTLE_MS);
 
@@ -761,30 +769,36 @@ export default function App() {
   }, [selectedEntry]);
 
   useEffect(() => {
-    if (!isPlaying || cassettePhase !== "idle") {
+    if (!isPlaying || isCassetteLocked || selectedEntry !== displayedEntry) {
       return undefined;
     }
 
     const flipTimer = window.setTimeout(() => {
-      setCassetteSide(!isCassetteFlipped);
-    }, 5000);
+      if (flipCounter >= 4) {
+        setFlipCounter(0);
+        setCassetteSide(!isCassetteFlipped);
+        return;
+      }
+
+      setFlipCounter((counter) => counter + 1);
+    }, 1000);
 
     return () => window.clearTimeout(flipTimer);
-  }, [cassettePhase, displayedEntry, isCassetteBackSettled, isCassetteFlipped, isPlaying]);
+  }, [displayedEntry, flipCounter, isCassetteBackSettled, isCassetteFlipped, isCassetteLocked, isPlaying, selectedEntry]);
 
   useEffect(() => {
     setIsCassetteBackSettled(false);
 
-    if (!isCassetteFlipped || cassettePhase !== "idle") {
+    if (!isCassetteFlipped || isCassetteLocked) {
       return undefined;
     }
 
     const settleTimer = window.setTimeout(() => {
       setIsCassetteBackSettled(true);
-    }, 1150);
+    }, CASSETTE_FLIP_MS);
 
     return () => window.clearTimeout(settleTimer);
-  }, [cassettePhase, isCassetteFlipped]);
+  }, [isCassetteFlipped, isCassetteLocked]);
 
   useEffect(() => {
     if (selectedPlaylistItem.type !== "profile" || allStackCards.length <= 4) {
@@ -800,7 +814,7 @@ export default function App() {
   }, [allStackCards.length, selectedPlaylistItem.type]);
 
   const togglePlayback = () => {
-    if (cassettePhase !== "idle") {
+    if (isCassetteLocked) {
       return;
     }
 
@@ -817,16 +831,29 @@ export default function App() {
   };
 
   const changeEntry = (nextIndex) => {
-    if (cassettePhase !== "idle" || nextIndex < 0 || nextIndex >= playlist.length) {
+    if (
+      isCassetteLocked
+      || nextIndex < 0
+      || nextIndex >= playlist.length
+      || nextIndex === selectedEntry
+    ) {
       return;
     }
+
     setMobileSidebarOpen(false);
-    setSelectedEntry((current) => {
-      if (nextIndex === current) {
-        return current;
-      }
-      return nextIndex;
-    });
+
+    if (isCassetteFlipped) {
+      setIsEntrySwitchPreparing(true);
+      setFlipCounter(0);
+      setCassetteSide(false);
+      entrySwitchTimerRef.current = window.setTimeout(() => {
+        entrySwitchTimerRef.current = null;
+        setSelectedEntry(nextIndex);
+      }, CASSETTE_FLIP_MS + 80);
+      return;
+    }
+
+    setSelectedEntry(nextIndex);
   };
 
   useEffect(() => {
@@ -834,7 +861,7 @@ export default function App() {
   }, [selectedEntry]);
 
   useEffect(() => {
-    if (!isPlaying || cassettePhase !== "idle" || selectedEntry !== displayedEntry) {
+    if (!isPlaying || isCassetteLocked || selectedEntry !== displayedEntry) {
       return undefined;
     }
 
@@ -843,20 +870,20 @@ export default function App() {
     }, 1000);
 
     return () => window.clearInterval(countdownTimer);
-  }, [cassettePhase, displayedEntry, isPlaying, selectedEntry]);
+  }, [displayedEntry, isCassetteLocked, isPlaying, selectedEntry]);
 
   useEffect(() => {
     if (
       trackSecondsRemaining !== 0
       || !isPlaying
-      || cassettePhase !== "idle"
+      || isCassetteLocked
       || selectedEntry !== displayedEntry
     ) {
       return;
     }
 
     changeEntry((selectedEntry + 1) % playlist.length);
-  }, [cassettePhase, displayedEntry, isPlaying, playlist.length, selectedEntry, trackSecondsRemaining]);
+  }, [displayedEntry, isCassetteLocked, isPlaying, playlist.length, selectedEntry, trackSecondsRemaining]);
 
   return (
     <div className="app-shell">
@@ -919,7 +946,7 @@ export default function App() {
                     <Cassette
                       tapeDetails={tapeDetails}
                       accent={displayedPlaylistItem.accent}
-                      spinning={isPlaying && cassettePhase === "idle"}
+                      spinning={isPlaying && !isCassetteLocked}
                       dictionary={dictionary}
                       className={`cassette-current ${cassettePhase === "ejecting" ? "is-ejecting" : ""}`}
                       flipped={isCassetteFlipped}
@@ -927,7 +954,7 @@ export default function App() {
                       backTapeDetails={displayedPlaylistItem.backTape}
                       experienceEntries={displayedPlaylistItem.type === "profile" ? profile.experience : []}
                       locale={locale}
-                      interactive={cassettePhase === "idle"}
+                      interactive={!isCassetteLocked}
                       onActivate={togglePlayback}
                       backSettled={isCassetteBackSettled}
                       flipPreparing={isCassetteFlipPreparing}
@@ -1103,7 +1130,7 @@ export default function App() {
               <button
                 key={item.number}
                 type="button"
-                className={`playlist-item ${selectedEntry === index ? "active" : ""} ${cassettePhase !== "idle" ? "is-locked" : ""}`}
+                className={`playlist-item ${selectedEntry === index ? "active" : ""} ${isCassetteLocked ? "is-locked" : ""}`}
                 style={{ "--accent": item.accent }}
                 onClick={() => changeEntry(index)}
               >
@@ -1151,7 +1178,7 @@ export default function App() {
         </button>
 
         <div className="playback">
-          <button type="button" className="transport-button icon-transport" onClick={() => changeEntry((selectedEntry - 1 + playlist.length) % playlist.length)} disabled={cassettePhase !== "idle"}>
+          <button type="button" className="transport-button icon-transport" onClick={() => changeEntry((selectedEntry - 1 + playlist.length) % playlist.length)} disabled={isCassetteLocked}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="19 20 9 12 19 4 19 20" />
               <line x1="5" x2="5" y1="19" y2="5" />
@@ -1171,7 +1198,7 @@ export default function App() {
               type="button"
               className="play-button"
               onClick={togglePlayback}
-              disabled={cassettePhase !== "idle"}
+              disabled={isCassetteLocked}
               aria-label={isPlaying ? "Pause and hold cassette back" : "Resume cassette playback"}
             >
               <div className="play-button-inner">
@@ -1192,7 +1219,7 @@ export default function App() {
             type="button"
             className="transport-button icon-transport"
             onClick={() => changeEntry((selectedEntry + 1) % playlist.length)}
-            disabled={cassettePhase !== "idle"}
+            disabled={isCassetteLocked}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="5 4 15 12 5 20 5 4" />
